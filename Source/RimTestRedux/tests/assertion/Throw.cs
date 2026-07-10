@@ -12,6 +12,7 @@ namespace RimTestRedux.tests.assertion
         {
             AssertFunc(() => throw new Exception()).To.Throw();
         }
+
         [Test]
         public static void ThrowWhenNotThrow()
         {

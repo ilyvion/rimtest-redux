@@ -12,6 +12,7 @@ namespace RimTestRedux.tests.assertion
         {
             Assert(null).To.Be.Null();
         }
+
         [Test]
         public static void ThrowWhenNotNull()
         {

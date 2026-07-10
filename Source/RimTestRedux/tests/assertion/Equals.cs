@@ -12,6 +12,7 @@ namespace RimTestRedux.tests.assertion
         {
             Assert(1).To.Be.EqualTo(1);
         }
+
         [Test]
         public static void ThrowWhenNotEqual()
         {

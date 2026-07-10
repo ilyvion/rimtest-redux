@@ -9,23 +9,28 @@
         /// Invalid Test Suite
         /// </summary>
         SKIP,
+
         /// <summary>
         /// Any test fails
         /// </summary>
-        ERROR, 
+        ERROR,
+
         /// <summary>
         /// Any test skipped
         /// </summary>
         WARNING,
+
         /// <summary>
         /// Any test is not run
         /// </summary>
         UNKNOWN,
+
         /// <summary>
         /// All tests are successful
         /// </summary>
-        PASS
+        PASS,
     }
+
     /// <summary>
     /// Utils for TestStatus
     /// </summary>

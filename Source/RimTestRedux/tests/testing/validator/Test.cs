@@ -8,16 +8,25 @@ namespace RimTestRedux.tests
     public class MockTests
     {
         protected static void NonPublicTest() { }
+
         public void NonStaticTest() { }
-        public static bool NonVoidReturnTest() { return true; }
-        public static void NonParameterFreeTest(bool value) { bool _ = value; }
+
+        public static bool NonVoidReturnTest()
+        {
+            return true;
+        }
+
+        public static void NonParameterFreeTest(bool value)
+        {
+            bool _ = value;
+        }
+
         public static void ValidTest() { }
     }
 
     [TestSuite]
     public static class Testing
     {
-
         private static MethodInfo GetMethodInfo(string methodName)
         {
             return typeof(MockTests).GetTypeInfo().GetMethod(methodName);
@@ -26,10 +35,8 @@ namespace RimTestRedux.tests
         [Test]
         public static void PassWhenPublic()
         {
-
             Assert(CheckTestIsPublic(GetMethodInfo("ValidTest"))).To.Be.True();
         }
-
 
         [Test]
         public static void PassWhenStatic()
@@ -52,7 +59,13 @@ namespace RimTestRedux.tests
         [Test]
         public static void PassWhenValid()
         {
-            AssertFunc(delegate { IsValidTest(GetMethodInfo("ValidTest")); }).Not.To.Throw();
+            AssertFunc(
+                delegate
+                {
+                    IsValidTest(GetMethodInfo("ValidTest"));
+                }
+            )
+                .Not.To.Throw();
         }
 
         [Test]
@@ -79,19 +92,18 @@ namespace RimTestRedux.tests
         [Test]
         public static void CheckIsFalseWhenNonStatic()
         {
-
             Assert(CheckTestIsStatic(GetMethodInfo("NonStaticTest"))).To.Be.False();
         }
+
         [Test]
         public static void CheckIsFalseWhenNonVoidReturnType()
         {
-
             Assert(CheckTestReturnsVoid(GetMethodInfo("NonVoidReturnTest"))).To.Be.False();
         }
+
         [Test]
         public static void CheckIsFalseWhenAcceptsParameters()
         {
-
             Assert(CheckTestIsParameterFree(GetMethodInfo("NonParameterFreeTest"))).To.Be.False();
         }
 

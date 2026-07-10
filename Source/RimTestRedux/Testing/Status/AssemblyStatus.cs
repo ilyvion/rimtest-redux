@@ -9,19 +9,23 @@
         /// Any test suite fails
         /// </summary>
         ERROR,
+
         /// <summary>
         /// Any test suite is skipped or have warnings
         /// </summary>
         WARNING,
+
         /// <summary>
         /// Any test suite is not run
         /// </summary>
         UNKNOWN,
+
         /// <summary>
         /// All test suites are successful
         /// </summary>
-        PASS
+        PASS,
     }
+
     /// <summary>
     /// Utils for AssemblyStatus
     /// </summary>

@@ -12,6 +12,7 @@ namespace RimTestRedux.tests.assertion
         {
             Assert(1).To.Be.LessThan(2);
         }
+
         [Test]
         public static void ThrowWhenNotLess()
         {

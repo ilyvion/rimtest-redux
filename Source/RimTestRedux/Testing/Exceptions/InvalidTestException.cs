@@ -6,20 +6,15 @@ namespace RimTestRedux
     [Serializable]
     internal class InvalidTestException : Exception
     {
-        public InvalidTestException()
-        {
-        }
+        public InvalidTestException() { }
 
-        public InvalidTestException(string message) : base(message)
-        {
-        }
+        public InvalidTestException(string message)
+            : base(message) { }
 
-        public InvalidTestException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public InvalidTestException(string message, Exception innerException)
+            : base(message, innerException) { }
 
-        protected InvalidTestException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        protected InvalidTestException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 }

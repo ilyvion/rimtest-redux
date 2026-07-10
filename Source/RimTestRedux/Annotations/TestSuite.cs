@@ -6,7 +6,7 @@ namespace RimTestRedux
     /// TestSuite meta-attribute, used to register a class as a test suite to be discovered by RimTestRedux.
     /// </summary>
     /// <remarks>
-    /// Only used when the class contains valid tests functions decorated with the meta-attribute Test. 
+    /// Only used when the class contains valid tests functions decorated with the meta-attribute Test.
     /// Valid Test Suites are static and public, see code example
     /// </remarks>
     /// <code>
@@ -15,7 +15,5 @@ namespace RimTestRedux
     ///     //tests
     /// }
     /// </code>
-    public class TestSuite : Attribute
-    {
-    }
+    public class TestSuite : Attribute { }
 }

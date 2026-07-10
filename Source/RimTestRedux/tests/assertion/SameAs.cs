@@ -13,6 +13,7 @@ namespace RimTestRedux.tests.assertion
             IComparable mock = "a";
             Assert(mock).To.Be.TheSame(mock);
         }
+
         [Test]
         public static void ThrowWhenNotSame()
         {

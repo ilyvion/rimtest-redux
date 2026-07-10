@@ -12,6 +12,7 @@ namespace RimTestRedux.tests.assertion
         {
             Assert(1).To.Be.GreaterThan(0);
         }
+
         [Test]
         public static void ThrowWhenNotGreater()
         {

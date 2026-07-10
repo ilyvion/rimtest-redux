@@ -13,22 +13,29 @@ namespace RimTestRedux.Testing
             }
             if (!CheckTestSuiteIsStatic(testSuite))
             {
-                throw new InvalidTestSuiteException($"{testSuite.Name}: test suite must be static.");
+                throw new InvalidTestSuiteException(
+                    $"{testSuite.Name}: test suite must be static."
+                );
             }
             if (!CheckTestSuiteIsPublic(testSuite))
             {
-                throw new InvalidTestSuiteException($"{testSuite.Name}: test suite must be public.");
+                throw new InvalidTestSuiteException(
+                    $"{testSuite.Name}: test suite must be public."
+                );
             }
         }
 
         public static bool CheckTestSuiteIsPublic(Type testSuite)
         {
-            if (testSuite == null) return false;
+            if (testSuite == null)
+                return false;
             return testSuite.IsPublic;
         }
+
         public static bool CheckTestSuiteIsStatic(Type testSuite)
         {
-            if (testSuite == null) return false;
+            if (testSuite == null)
+                return false;
             return testSuite.IsClass && testSuite.IsSealed && testSuite.IsAbstract;
         }
 
@@ -41,7 +48,9 @@ namespace RimTestRedux.Testing
 
             if (!CheckTestReturnsVoid(method))
             {
-                throw new InvalidTestException($"{method.Name}: tests must have a void return type.");
+                throw new InvalidTestException(
+                    $"{method.Name}: tests must have a void return type."
+                );
             }
             if (!CheckTestIsParameterFree(method))
             {
@@ -59,22 +68,29 @@ namespace RimTestRedux.Testing
 
         public static bool CheckTestIsPublic(MethodInfo method)
         {
-            if (method == null) return false;
+            if (method == null)
+                return false;
             return method.IsPublic;
         }
+
         public static bool CheckTestIsStatic(MethodInfo method)
         {
-            if (method == null) return false;
+            if (method == null)
+                return false;
             return method.IsStatic;
         }
+
         public static bool CheckTestReturnsVoid(MethodInfo method)
         {
-            if (method == null) return false;
+            if (method == null)
+                return false;
             return method.ReturnType == typeof(void);
         }
+
         public static bool CheckTestIsParameterFree(MethodInfo method)
         {
-            if (method == null) return false;
+            if (method == null)
+                return false;
             return method.GetParameters().Length == 0;
         }
     }

@@ -8,20 +8,24 @@
         /// <summary>
         /// invalid test
         /// </summary>
-        SKIP, 
+        SKIP,
+
         /// <summary>
         /// not run yet
         /// </summary>
-        UNKNOWN, 
+        UNKNOWN,
+
         /// <summary>
         /// failed
         /// </summary>
-        ERROR, 
+        ERROR,
+
         /// <summary>
         /// passed
         /// </summary>
-        PASS
+        PASS,
     }
+
     /// <summary>
     /// Utils for TestStatus
     /// </summary>

@@ -26,6 +26,7 @@ namespace RimTestRedux.tests.assertion
             }
             throw new Exception("Should have thrown an exception.");
         }
+
         [Test]
         public static void ThrowWhenEqualToMax()
         {
@@ -39,6 +40,7 @@ namespace RimTestRedux.tests.assertion
             }
             throw new Exception("Should have thrown an exception.");
         }
+
         [Test]
         public static void ThrowWhenEqualToBoth()
         {
@@ -52,6 +54,7 @@ namespace RimTestRedux.tests.assertion
             }
             throw new Exception("Should have thrown an exception.");
         }
+
         [Test]
         public static void ThrowWhenUnder()
         {
@@ -65,6 +68,7 @@ namespace RimTestRedux.tests.assertion
             }
             throw new Exception("Should have thrown an exception.");
         }
+
         [Test]
         public static void ThrowWhenOver()
         {
@@ -78,6 +82,7 @@ namespace RimTestRedux.tests.assertion
             }
             throw new Exception("Should have thrown an exception.");
         }
+
         [Test]
         public static void ThrowWhenInvalidLimits()
         {

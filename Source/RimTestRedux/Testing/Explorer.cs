@@ -13,9 +13,13 @@ namespace RimTestRedux.Testing
     /// </summary>
     public static class TimeElapsedExplorer
     {
-        static readonly IDictionary<Assembly, double> asm2TimeElapsed = new Dictionary<Assembly, double>();
-        static readonly IDictionary<Type, double> testSuite2TimeElapsed = new Dictionary<Type, double>();
-        static readonly IDictionary<MethodInfo, double> test2TimeElapsed = new Dictionary<MethodInfo, double>(); 
+        static readonly IDictionary<Assembly, double> asm2TimeElapsed =
+            new Dictionary<Assembly, double>();
+        static readonly IDictionary<Type, double> testSuite2TimeElapsed =
+            new Dictionary<Type, double>();
+        static readonly IDictionary<MethodInfo, double> test2TimeElapsed =
+            new Dictionary<MethodInfo, double>();
+
         /// <summary>
         /// </summary>
         public static void UpdateAllAssembliesTimeElapsed()
@@ -25,6 +29,7 @@ namespace RimTestRedux.Testing
                 UpdateAssemblyTimeElapsed(asm);
             }
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
@@ -33,6 +38,7 @@ namespace RimTestRedux.Testing
         {
             asm2TimeElapsed[asm] = time;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
@@ -43,20 +49,25 @@ namespace RimTestRedux.Testing
             {
                 UpdateTestSuiteTimeElapsed(ts);
                 double testtime = GetTestSuiteTimeElapsed(ts);
-                if (testtime != -1) totaltime += testtime;
+                if (testtime != -1)
+                    totaltime += testtime;
             }
             SetAssemblyTimeElapsed(asm, totaltime);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
         /// <returns></returns>
         public static double GetAssemblyTimeElapsed(Assembly asm)
         {
-            if (asm2TimeElapsed.ContainsKey(asm)) return asm2TimeElapsed[asm];
-            else UpdateAssemblyTimeElapsed(asm);
+            if (asm2TimeElapsed.ContainsKey(asm))
+                return asm2TimeElapsed[asm];
+            else
+                UpdateAssemblyTimeElapsed(asm);
             return asm2TimeElapsed[asm];
         }
+
         /// <summary>
         /// </summary>
         /// <param name="ts"></param>
@@ -65,6 +76,7 @@ namespace RimTestRedux.Testing
         {
             testSuite2TimeElapsed[ts] = time;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="ts"></param>
@@ -74,21 +86,25 @@ namespace RimTestRedux.Testing
             foreach (var test in TestSuite2TestLink.GetTests(ts))
             {
                 double testtime = GetTestTimeElapsed(test);
-                if (testtime != -1) totaltime += testtime;
+                if (testtime != -1)
+                    totaltime += testtime;
             }
             SetTestSuiteTimeElapsed(ts, totaltime);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="ts"></param>
         /// <returns></returns>
         public static double GetTestSuiteTimeElapsed(Type ts)
         {
-
-            if (testSuite2TimeElapsed.ContainsKey(ts)) return testSuite2TimeElapsed[ts];
-            else UpdateTestSuiteTimeElapsed(ts);
+            if (testSuite2TimeElapsed.ContainsKey(ts))
+                return testSuite2TimeElapsed[ts];
+            else
+                UpdateTestSuiteTimeElapsed(ts);
             return testSuite2TimeElapsed[ts];
         }
+
         /// <summary>
         /// </summary>
         /// <param name="test"></param>
@@ -97,13 +113,15 @@ namespace RimTestRedux.Testing
         {
             test2TimeElapsed[test] = time;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
         public static double GetTestTimeElapsed(MethodInfo test)
         {
-            if (test2TimeElapsed.ContainsKey(test)) return test2TimeElapsed[test];
+            if (test2TimeElapsed.ContainsKey(test))
+                return test2TimeElapsed[test];
             return -1;
         }
     }
@@ -114,60 +132,71 @@ namespace RimTestRedux.Testing
     public static class FilteredExplorer
     {
         static Regex filter = new Regex(@"");
+
         /// <summary>
         /// Are failed state asm shown?
         /// </summary>
-        static public bool failEnabledAsm = true;
+        public static bool failEnabledAsm = true;
+
         /// <summary>
         /// Are warning state asm shown?
         /// </summary>
-        static public bool warningEnabledAsm = true;
+        public static bool warningEnabledAsm = true;
+
         /// <summary>
         /// Are unknown state asm shown?
         /// </summary>
-        static public bool unknownEnabledAsm = true;
+        public static bool unknownEnabledAsm = true;
+
         /// <summary>
         /// Are passed state asm shown?
         /// </summary>
-        static public bool passEnabledAsm = true;
+        public static bool passEnabledAsm = true;
 
         /// <summary>
         /// Are failed state TS shown?
         /// </summary>
-        static public bool failEnabledTS = true;
+        public static bool failEnabledTS = true;
+
         /// <summary>
         /// Are warning state TS shown?
         /// </summary>
-        static public bool warningEnabledTS = true;
+        public static bool warningEnabledTS = true;
+
         /// <summary>
         /// Are unknown state TS shown?
         /// </summary>
-        static public bool unknownEnabledTS = true;
+        public static bool unknownEnabledTS = true;
+
         /// <summary>
         /// Are skipped state TS shown?
         /// </summary>
-        static public bool skipEnabledTS = true;
+        public static bool skipEnabledTS = true;
+
         /// <summary>
         /// Are passed state TS shown?
         /// </summary>
-        static public bool passEnabledTS = true;
+        public static bool passEnabledTS = true;
 
         /// <summary>
         /// Are failed state T shown?
         /// </summary>
-        static public bool failEnabledT = true;
+        public static bool failEnabledT = true;
+
         /// <summary>
         /// Are unknown state T shown?
         /// </summary>
-        static public bool unknownEnabledT = true;
+        public static bool unknownEnabledT = true;
+
         /// <summary>
         /// Are skipped state T shown?
         /// </summary>
-        static public bool skipEnabledT = true;
+        public static bool skipEnabledT = true;
+
         /// <summary>
         /// Are passed state T shown?
         /// </summary>
-        static public bool passEnabledT = true;
+        public static bool passEnabledT = true;
 
         /// <summary>
         /// </summary>
@@ -176,6 +205,7 @@ namespace RimTestRedux.Testing
         {
             FilteredExplorer.filter = filter;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
@@ -191,6 +221,7 @@ namespace RimTestRedux.Testing
                 _ => false,
             };
         }
+
         /// <summary>
         /// </summary>
         /// <param name="ts"></param>
@@ -207,6 +238,7 @@ namespace RimTestRedux.Testing
                 _ => false,
             };
         }
+
         /// <summary>
         /// </summary>
         /// <param name="t"></param>
@@ -222,22 +254,35 @@ namespace RimTestRedux.Testing
                 _ => false,
             };
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
         /// <returns></returns>
         public static bool DoesAssemblyMatchesFilter(Assembly asm)
         {
-            return (filter.IsMatch(asm.GetName().Name) || Assembly2TestSuiteLink.GetTestSuites(asm).Any((Type ts) => DoesTestSuiteMatchesFilter(ts))) && DoesAssemblyStatusMatchesFilter(asm);
+            return (
+                    filter.IsMatch(asm.GetName().Name)
+                    || Assembly2TestSuiteLink
+                        .GetTestSuites(asm)
+                        .Any((Type ts) => DoesTestSuiteMatchesFilter(ts))
+                ) && DoesAssemblyStatusMatchesFilter(asm);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="testSuite"></param>
         /// <returns></returns>
         public static bool DoesTestSuiteMatchesFilter(Type testSuite)
         {
-            return (filter.IsMatch(testSuite.Name) || TestSuite2TestLink.GetTests(testSuite).Any((MethodInfo t) => DoesTestMatchesFilter(t))) && DoesTestSuiteStatusMatchesFilter(testSuite);
+            return (
+                    filter.IsMatch(testSuite.Name)
+                    || TestSuite2TestLink
+                        .GetTests(testSuite)
+                        .Any((MethodInfo t) => DoesTestMatchesFilter(t))
+                ) && DoesTestSuiteStatusMatchesFilter(testSuite);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="test"></param>
@@ -246,6 +291,7 @@ namespace RimTestRedux.Testing
         {
             return filter.IsMatch(test.Name) && DoesTestStatusMatchesFilter(test);
         }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -256,6 +302,7 @@ namespace RimTestRedux.Testing
                 .Where((Assembly asm) => DoesAssemblyMatchesFilter(asm))
                 .ToList();
         }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -266,6 +313,7 @@ namespace RimTestRedux.Testing
                 .Where((Type ts) => DoesTestSuiteMatchesFilter(ts))
                 .ToList();
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
@@ -277,6 +325,7 @@ namespace RimTestRedux.Testing
                 .Where((Type ts) => DoesTestSuiteMatchesFilter(ts))
                 .ToList();
         }
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -287,6 +336,7 @@ namespace RimTestRedux.Testing
                 .Where((MethodInfo t) => DoesTestMatchesFilter(t))
                 .ToList();
         }
+
         /// <summary>
         /// </summary>
         /// <param name="ts"></param>
@@ -299,15 +349,19 @@ namespace RimTestRedux.Testing
                 .ToList();
         }
     }
+
     /// <summary>
     /// Keeps track of test statuses
     /// </summary>
     public static class StatusExplorer
     {
+        static readonly IDictionary<AssemblyStatus, int> asmStatus2count =
+            new Dictionary<AssemblyStatus, int>();
+        static readonly IDictionary<TestSuiteStatus, int> tsStatus2count =
+            new Dictionary<TestSuiteStatus, int>();
+        static readonly IDictionary<TestStatus, int> tStatus2count =
+            new Dictionary<TestStatus, int>();
 
-        static readonly IDictionary<AssemblyStatus, int> asmStatus2count = new Dictionary<AssemblyStatus, int>();
-        static readonly IDictionary<TestSuiteStatus, int> tsStatus2count = new Dictionary<TestSuiteStatus, int>();
-        static readonly IDictionary<TestStatus, int> tStatus2count = new Dictionary<TestStatus, int>();
         /// <summary>
         /// </summary>
         public static void UpdateAllStatusCounts()
@@ -325,38 +379,46 @@ namespace RimTestRedux.Testing
                 UpdateTestStatusCount(status);
             }
         }
+
         /// <summary>
         /// </summary>
         /// <param name="status"></param>
         public static void UpdateAssemblyStatusCount(AssemblyStatus status)
         {
             int value = FilteredExplorer
-                    .GetFilteredAssemblies()
-                    .Where((Assembly asm) => AssemblyExplorer.GetAssemblyStatus(asm) == status)
-                    .Count();
-            if (asmStatus2count.ContainsKey(status)) asmStatus2count[status] = value;
-            else asmStatus2count.Add(status, value);
+                .GetFilteredAssemblies()
+                .Where((Assembly asm) => AssemblyExplorer.GetAssemblyStatus(asm) == status)
+                .Count();
+            if (asmStatus2count.ContainsKey(status))
+                asmStatus2count[status] = value;
+            else
+                asmStatus2count.Add(status, value);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="status"></param>
         /// <returns></returns>
         public static int GetAssemblyStatusCount(AssemblyStatus status)
         {
-            if (!asmStatus2count.ContainsKey(status)) UpdateAssemblyStatusCount(status);
+            if (!asmStatus2count.ContainsKey(status))
+                UpdateAssemblyStatusCount(status);
             return asmStatus2count[status];
         }
+
         /// <summary>
         /// </summary>
         /// <param name="status"></param>
         public static void UpdateTestSuiteStatusCount(TestSuiteStatus status)
         {
             int value = FilteredExplorer
-                    .GetFilteredTestSuites()
-                    .Where((Type ts) => TestSuiteExplorer.GetTestSuiteStatus(ts) == status)
-                    .Count();
-            if (tsStatus2count.ContainsKey(status)) tsStatus2count[status] = value;
-            else tsStatus2count.Add(status, value);
+                .GetFilteredTestSuites()
+                .Where((Type ts) => TestSuiteExplorer.GetTestSuiteStatus(ts) == status)
+                .Count();
+            if (tsStatus2count.ContainsKey(status))
+                tsStatus2count[status] = value;
+            else
+                tsStatus2count.Add(status, value);
         }
 
         /// <summary>
@@ -364,20 +426,24 @@ namespace RimTestRedux.Testing
         /// <param name="status"></param>
         public static int GetTestSuiteStatusCount(TestSuiteStatus status)
         {
-            if (!tsStatus2count.ContainsKey(status)) UpdateTestSuiteStatusCount(status);
+            if (!tsStatus2count.ContainsKey(status))
+                UpdateTestSuiteStatusCount(status);
             return tsStatus2count[status];
         }
+
         /// <summary>
         /// </summary>
         /// <param name="status"></param>
         public static void UpdateTestStatusCount(TestStatus status)
         {
             int value = FilteredExplorer
-                    .GetFilteredTests()
-                    .Where((MethodInfo t) => TestExplorer.GetTestStatus(t) == status)
-                    .Count();
-            if (tStatus2count.ContainsKey(status)) tStatus2count[status] = value;
-            else tStatus2count.Add(status, value);
+                .GetFilteredTests()
+                .Where((MethodInfo t) => TestExplorer.GetTestStatus(t) == status)
+                .Count();
+            if (tStatus2count.ContainsKey(status))
+                tStatus2count[status] = value;
+            else
+                tStatus2count.Add(status, value);
         }
 
         /// <summary>
@@ -385,10 +451,10 @@ namespace RimTestRedux.Testing
         /// <param name="status"></param>
         public static int GetTestStatusCount(TestStatus status)
         {
-            if (!tStatus2count.ContainsKey(status)) UpdateTestStatusCount(status);
+            if (!tStatus2count.ContainsKey(status))
+                UpdateTestStatusCount(status);
             return tStatus2count[status];
         }
-
     }
 
     /// <summary>
@@ -396,8 +462,11 @@ namespace RimTestRedux.Testing
     /// </summary>
     public static class AssemblyExplorer
     {
-        static readonly IDictionary<Assembly, AssemblyStatus> asm2Status = new Dictionary<Assembly, AssemblyStatus>();
-        static readonly IDictionary<Assembly, Exception> asm2Error = new Dictionary<Assembly, Exception>();
+        static readonly IDictionary<Assembly, AssemblyStatus> asm2Status =
+            new Dictionary<Assembly, AssemblyStatus>();
+        static readonly IDictionary<Assembly, Exception> asm2Error =
+            new Dictionary<Assembly, Exception>();
+
         /// <summary>
         /// </summary>
         /// <returns></returns>
@@ -405,8 +474,6 @@ namespace RimTestRedux.Testing
         {
             return asm2Status.Keys;
         }
-
-        
 
         /// <summary>
         /// </summary>
@@ -416,6 +483,7 @@ namespace RimTestRedux.Testing
         {
             asm2Status[asm] = status;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
@@ -424,6 +492,7 @@ namespace RimTestRedux.Testing
         {
             asm2Error[asm] = error;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="asm"></param>
@@ -431,7 +500,8 @@ namespace RimTestRedux.Testing
         /// <seealso cref="AssemblyStatus"/>
         public static AssemblyStatus GetAssemblyStatus(Assembly asm)
         {
-            if (!asm2Status.ContainsKey(asm)) asm2Status.Add(asm, AssemblyStatus.UNKNOWN);
+            if (!asm2Status.ContainsKey(asm))
+                asm2Status.Add(asm, AssemblyStatus.UNKNOWN);
             return asm2Status[asm];
         }
 
@@ -441,17 +511,20 @@ namespace RimTestRedux.Testing
         /// <returns>The current registered Exception else null if none registered</returns>
         public static Exception GetAssemblyError(Assembly asm)
         {
-            if (asm2Error.ContainsKey(asm)) return asm2Error[asm];
+            if (asm2Error.ContainsKey(asm))
+                return asm2Error[asm];
             return null;
         }
-
     }
+
     /// <summary>
     /// Stores and manage the links between registered assemblies and their registered test suites
     /// </summary>
     public static class Assembly2TestSuiteLink
     {
-        static readonly IDictionary<Assembly, ISet<Type>> asm2TestSuites = new Dictionary<Assembly, ISet<Type>>();
+        static readonly IDictionary<Assembly, ISet<Type>> asm2TestSuites =
+            new Dictionary<Assembly, ISet<Type>>();
+
         /// <summary>
         /// Can register multiple unique test suites to the same assembly. Will not store duplicates.
         /// </summary>
@@ -465,6 +538,7 @@ namespace RimTestRedux.Testing
             }
             asm2TestSuites[asm].Add(testSuite);
         }
+
         /// <summary>
         /// </summary>
         /// <returns>A list of all known assemblies</returns>
@@ -479,10 +553,10 @@ namespace RimTestRedux.Testing
         /// <returns>A set of registered tests suites for this assembly. Returns an empty set if the assembly is not registered.</returns>
         public static ISet<Type> GetTestSuites(Assembly asm)
         {
-            if (asm2TestSuites.ContainsKey(asm)) return asm2TestSuites[asm];
+            if (asm2TestSuites.ContainsKey(asm))
+                return asm2TestSuites[asm];
             return new HashSet<Type>();
         }
-
     }
 
     /// <summary>
@@ -490,8 +564,10 @@ namespace RimTestRedux.Testing
     /// </summary>
     public static class TestSuiteExplorer
     {
-        static readonly IDictionary<Type, TestSuiteStatus> testSuite2Status = new Dictionary<Type, TestSuiteStatus>();
-        static readonly IDictionary<Type, Exception> testSuite2Error = new Dictionary<Type, Exception>();
+        static readonly IDictionary<Type, TestSuiteStatus> testSuite2Status =
+            new Dictionary<Type, TestSuiteStatus>();
+        static readonly IDictionary<Type, Exception> testSuite2Error =
+            new Dictionary<Type, Exception>();
 
         /// <summary>
         /// </summary>
@@ -501,8 +577,6 @@ namespace RimTestRedux.Testing
             return testSuite2Status.Keys;
         }
 
-        
-
         /// <summary>
         /// </summary>
         /// <param name="testSuite"></param>
@@ -511,6 +585,7 @@ namespace RimTestRedux.Testing
         {
             testSuite2Status[testSuite] = status;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="testSuite"></param>
@@ -519,23 +594,27 @@ namespace RimTestRedux.Testing
         {
             testSuite2Error[testSuite] = error;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="testSuite"></param>
         /// <returns>current registered TestSuiteStatus else TestSuiteStatus.UNKNOWN</returns>
         public static TestSuiteStatus GetTestSuiteStatus(Type testSuite)
         {
-            if (!testSuite2Status.ContainsKey(testSuite)) testSuite2Status.Add(testSuite, TestSuiteStatus.UNKNOWN);
-            
+            if (!testSuite2Status.ContainsKey(testSuite))
+                testSuite2Status.Add(testSuite, TestSuiteStatus.UNKNOWN);
+
             return testSuite2Status[testSuite];
         }
+
         /// <summary>
         /// </summary>
         /// <param name="testSuite"></param>
         /// <returns>current registered Exception else null if none registered</returns>
         public static Exception GetTestSuiteError(Type testSuite)
         {
-            if (testSuite2Error.ContainsKey(testSuite)) return testSuite2Error[testSuite];
+            if (testSuite2Error.ContainsKey(testSuite))
+                return testSuite2Error[testSuite];
             return null;
         }
     }
@@ -545,7 +624,8 @@ namespace RimTestRedux.Testing
     /// </summary>
     public static class TestSuite2TestLink
     {
-        static readonly IDictionary<Type, ISet<MethodInfo>> testSuite2Tests = new Dictionary<Type, ISet<MethodInfo>>();
+        static readonly IDictionary<Type, ISet<MethodInfo>> testSuite2Tests =
+            new Dictionary<Type, ISet<MethodInfo>>();
 
         /// <summary>
         /// </summary>
@@ -559,13 +639,15 @@ namespace RimTestRedux.Testing
             }
             testSuite2Tests[testSuite].Add(test);
         }
+
         /// <summary>
         /// </summary>
         /// <param name="testSuite"></param>
         /// <returns>A set of registered tests for this test suite. Returns an empty set if the test suite is not registered.</returns>
         public static ISet<MethodInfo> GetTests(Type testSuite)
         {
-            if (testSuite2Tests.ContainsKey(testSuite)) return testSuite2Tests[testSuite];
+            if (testSuite2Tests.ContainsKey(testSuite))
+                return testSuite2Tests[testSuite];
             return new HashSet<MethodInfo>();
         }
     }
@@ -575,10 +657,10 @@ namespace RimTestRedux.Testing
     /// </summary>
     public static class TestExplorer
     {
-        static readonly IDictionary<MethodInfo, TestStatus> test2Status = new Dictionary<MethodInfo, TestStatus>();
-        static readonly IDictionary<MethodInfo, Exception> test2Error = new Dictionary<MethodInfo, Exception>();
-
-        
+        static readonly IDictionary<MethodInfo, TestStatus> test2Status =
+            new Dictionary<MethodInfo, TestStatus>();
+        static readonly IDictionary<MethodInfo, Exception> test2Error =
+            new Dictionary<MethodInfo, Exception>();
 
         /// <summary>
         /// </summary>
@@ -588,6 +670,7 @@ namespace RimTestRedux.Testing
         {
             test2Status[test] = status;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="test"></param>
@@ -596,22 +679,26 @@ namespace RimTestRedux.Testing
         {
             test2Error[test] = error;
         }
+
         /// <summary>
         /// </summary>
         /// <param name="test"></param>
         /// <returns>current registered TestStatus else TestStatus.UNKNOWN</returns>
         public static TestStatus GetTestStatus(MethodInfo test)
         {
-            if (!test2Status.ContainsKey(test)) test2Status.Add(test, TestStatus.UNKNOWN);
+            if (!test2Status.ContainsKey(test))
+                test2Status.Add(test, TestStatus.UNKNOWN);
             return test2Status[test];
         }
+
         /// <summary>
         /// </summary>
         /// <param name="test"></param>
         /// <returns>current registered Exception else null if none registered</returns>
         public static Exception GetTestError(MethodInfo test)
         {
-            if (test2Error.ContainsKey(test)) return test2Error[test];
+            if (test2Error.ContainsKey(test))
+                return test2Error[test];
             return null;
         }
 
@@ -636,7 +723,7 @@ namespace RimTestRedux.Testing
             foreach (Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 ExploreAndRegisterTestSuites(asm);
-                if(Assembly2TestSuiteLink.GetTestSuites(asm).Count != 0)
+                if (Assembly2TestSuiteLink.GetTestSuites(asm).Count != 0)
                 {
                     AssemblyExplorer.SetAssemblyStatus(asm, AssemblyStatus.UNKNOWN);
                 }
@@ -648,8 +735,10 @@ namespace RimTestRedux.Testing
         /// <param name="asm">Entry point</param>
         public static void ExploreAndRegisterTestSuites(Assembly asm)
         {
-            foreach (Type testSuite in asm.GetTypes()
-                    .Where((Type type) => type.TryGetAttribute<TestSuite>() != null))
+            foreach (
+                Type testSuite in asm.GetTypes()
+                    .Where((Type type) => type.TryGetAttribute<TestSuite>() != null)
+            )
             {
                 try
                 {
@@ -672,7 +761,11 @@ namespace RimTestRedux.Testing
         /// <param name="testSuite">Entry point</param>
         public static void ExploreAndRegisterTests(Type testSuite)
         {
-            foreach (MethodInfo test in testSuite.GetMethods().Where((MethodInfo info) => info.TryGetAttribute<Test>() != null))
+            foreach (
+                MethodInfo test in testSuite
+                    .GetMethods()
+                    .Where((MethodInfo info) => info.TryGetAttribute<Test>() != null)
+            )
             {
                 try
                 {
@@ -688,6 +781,5 @@ namespace RimTestRedux.Testing
                 }
             }
         }
-
     }
 }

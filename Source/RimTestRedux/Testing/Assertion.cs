@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace RimTestRedux
 {
     /// <summary>
-    /// Used when the condition expected from an assertion is not reached. 
+    /// Used when the condition expected from an assertion is not reached.
     /// </summary>
     /// <remarks>Throwing one indicates a test failure.</remarks>
     [Serializable]
@@ -13,30 +13,25 @@ namespace RimTestRedux
         /// <summary>
         /// constructor directly based on the base Exception
         /// </summary>
-        public AssertionException()
-        {
-        }
+        public AssertionException() { }
 
         /// <summary>
         /// constructor directly based on the base Exception
         /// </summary>
-        public AssertionException(string message) : base(message)
-        {
-        }
+        public AssertionException(string message)
+            : base(message) { }
 
         /// <summary>
         /// constructor directly based on the base Exception
         /// </summary>
-        public AssertionException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public AssertionException(string message, Exception innerException)
+            : base(message, innerException) { }
 
         /// <summary>
         /// constructor directly based on the base Exception
         /// </summary>
-        protected AssertionException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        protected AssertionException(SerializationInfo info, StreamingContext context)
+            : base(info, context) { }
     }
 
     /// <summary>
@@ -64,7 +59,8 @@ namespace RimTestRedux
         /// <returns>An AssertFunc, specialized in asserting Functions</returns>
         public static AssertFunc AssertFunc(Func<dynamic> thing)
         {
-            if (thing == null) throw new ArgumentNullException("A function cannot be null");
+            if (thing == null)
+                throw new ArgumentNullException("A function cannot be null");
             return new AssertFunc(thing);
         }
 
@@ -75,9 +71,11 @@ namespace RimTestRedux
         /// <returns>An AssertAction, specialized in asserting Actions</returns>
         public static AssertAction AssertFunc(Action thing)
         {
-            if (thing == null) throw new ArgumentNullException("A function cannot be null");
+            if (thing == null)
+                throw new ArgumentNullException("A function cannot be null");
             return new AssertAction(thing);
         }
+
         /// <summary>
         /// Negation flag, can be double negated with multiple uses of the .Not grammar, used to negate a check expectation. (i.e. Assert(1).Not.To.Be.EqualTo(2))
         /// </summary>
@@ -91,14 +89,17 @@ namespace RimTestRedux
     public class AssertValue : Assertion
     {
         private readonly IComparable thing;
+
         /// <summary>
         /// base constructor
         /// </summary>
         /// <param name="thing">The value to check</param>
-        public AssertValue(IComparable thing) : base()
+        public AssertValue(IComparable thing)
+            : base()
         {
             this.thing = thing;
         }
+
         /// <summary>
         /// Negation grammar link, negates the current assertion.
         /// </summary>
@@ -112,20 +113,17 @@ namespace RimTestRedux
             }
         }
 
-
         /// <summary>
         /// Grammar link, doesn't have any effect.
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public AssertValue To => this;
 
-
         /// <summary>
         /// Grammar link, doesn't have any effect.
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public AssertValue Is => this;
-
 
         /// <summary>
         /// Grammar link, doesn't have any effect.
@@ -138,6 +136,7 @@ namespace RimTestRedux
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public AssertValue Do => this;
+
         /// <summary>
         /// Check: asserted value EQUALS TO otherThing
         /// </summary>
@@ -145,9 +144,14 @@ namespace RimTestRedux
         public void EqualTo(IComparable otherThing)
         {
             bool result = thing.CompareTo(otherThing) == 0;
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be equal to {otherThing}.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be equal to {otherThing}."
+                );
         }
+
         /// <summary>
         /// Check: asserted value LESS THAN otherThing
         /// </summary>
@@ -155,9 +159,14 @@ namespace RimTestRedux
         public void LessThan(IComparable otherThing)
         {
             bool result = thing.CompareTo(otherThing) < 0;
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be less than {otherThing}.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be less than {otherThing}."
+                );
         }
+
         /// <summary>
         /// Check: asserted value GREATER THAN otherThing
         /// </summary>
@@ -165,9 +174,14 @@ namespace RimTestRedux
         public void GreaterThan(IComparable otherThing)
         {
             bool result = thing.CompareTo(otherThing) > 0;
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be greater than {otherThing}.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be greater than {otherThing}."
+                );
         }
+
         /// <summary>
         /// Check: minThing LESS THAN or EQUAL TO assertd value AND asserted value LESS THAN or EQUAL TO maxThing
         /// </summary>
@@ -176,9 +190,14 @@ namespace RimTestRedux
         public void BetweenInclusive(IComparable minThing, IComparable maxThing)
         {
             bool result = thing.CompareTo(minThing) >= 0 && thing.CompareTo(maxThing) <= 0;
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be between (inclusive) {minThing} and {maxThing}.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be between (inclusive) {minThing} and {maxThing}."
+                );
         }
+
         /// <summary>
         /// Check: minThing LESS THAN assertd value AND asserted value LESS THAN maxThing
         /// </summary>
@@ -187,8 +206,12 @@ namespace RimTestRedux
         public void BetweenExclusive(IComparable minThing, IComparable maxThing)
         {
             bool result = thing.CompareTo(minThing) > 0 && thing.CompareTo(maxThing) < 0;
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be between (exclusive) {minThing} and {maxThing}.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be between (exclusive) {minThing} and {maxThing}."
+                );
         }
 
         /// <summary>
@@ -198,38 +221,56 @@ namespace RimTestRedux
         public void TheSame(IComparable otherThing)
         {
             bool result = thing.Equals(otherThing);
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be the same as {otherThing}.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be the same as {otherThing}."
+                );
         }
+
         /// <summary>
         /// Check: thing IS null
         /// </summary>
         public void Null()
         {
             bool result = thing == null;
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be null.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be null."
+                );
         }
+
         /// <summary>
         /// Check: thing IS true
         /// </summary>
         public void True()
         {
             bool result = thing.Equals(true);
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be true.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be true."
+                );
         }
+
         /// <summary>
         /// Check: thing IS false
         /// </summary>
         public void False()
         {
             bool result = thing.Equals(false);
-            if (negated) result = !result;
-            if (!result) throw new AssertionException($"Expected {thing}{(negated ? " not" : "") } to be false.");
+            if (negated)
+                result = !result;
+            if (!result)
+                throw new AssertionException(
+                    $"Expected {thing}{(negated ? " not" : "")} to be false."
+                );
         }
     }
-
 
     /// <summary>
     /// Specialized Assertion for Functions
@@ -243,10 +284,12 @@ namespace RimTestRedux
         /// base constructor
         /// </summary>
         /// <param name="thing">The function to check</param>
-        public AssertFunc(Func<dynamic> thing) : base()
+        public AssertFunc(Func<dynamic> thing)
+            : base()
         {
             func = thing ?? throw new NullReferenceException("AssertFunc function cannot be null");
         }
+
         /// <summary>
         /// Negation grammar link, negates the current assertion.
         /// </summary>
@@ -260,20 +303,17 @@ namespace RimTestRedux
             }
         }
 
-
         /// <summary>
         /// Grammar link, doesn't have any effect.
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public AssertFunc To => this;
 
-
         /// <summary>
         /// Grammar link, doesn't have any effect.
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public AssertFunc Is => this;
-
 
         /// <summary>
         /// Grammar link, doesn't have any effect.
@@ -286,28 +326,34 @@ namespace RimTestRedux
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public AssertFunc Do => this;
+
         /// <summary>
         /// Internal constructor for AssertAction usage
         /// </summary>
         /// <remarks>Do NOT use manually</remarks>
-        protected AssertFunc() : base() { }
+        protected AssertFunc()
+            : base() { }
 
         /// <summary>
         /// Check: executing asserted callable throws an error.
         /// </summary>
         public void Throw()
         {
-            if (func == null) throw new NullReferenceException("AssertFunc function cannot be null");
+            if (func == null)
+                throw new NullReferenceException("AssertFunc function cannot be null");
             try
             {
                 func();
             }
             catch (Exception temp)
             {
-                if (negated) throw new AssertionException($"Expected the function not to throw.", temp);
-                else return;
+                if (negated)
+                    throw new AssertionException($"Expected the function not to throw.", temp);
+                else
+                    return;
             }
-            if (negated) return;
+            if (negated)
+                return;
             throw new AssertionException($"Expected the function to throw.");
         }
     }
@@ -324,10 +370,13 @@ namespace RimTestRedux
         /// base constructor
         /// </summary>
         /// <param name="thing">The function to check</param>
-        public AssertAction(Action thing) : base()
+        public AssertAction(Action thing)
+            : base()
         {
-            action = thing ?? throw new NullReferenceException("AssertFunc function cannot be null");
+            action =
+                thing ?? throw new NullReferenceException("AssertFunc function cannot be null");
         }
+
         /// <summary>
         /// Negation grammar link, negates the current assertion.
         /// </summary>
@@ -341,20 +390,17 @@ namespace RimTestRedux
             }
         }
 
-
         /// <summary>
         /// Grammar link, doesn't have any effect.
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public new AssertAction To => this;
 
-
         /// <summary>
         /// Grammar link, doesn't have any effect.
         /// </summary>
         /// <remarks>All grammar links can be chained as needed.</remarks>
         public new AssertAction Is => this;
-
 
         /// <summary>
         /// Grammar link, doesn't have any effect.
@@ -373,17 +419,21 @@ namespace RimTestRedux
         /// </summary>
         public new void Throw()
         {
-            if (action == null) throw new NullReferenceException("AssertFunc function cannot be null");
+            if (action == null)
+                throw new NullReferenceException("AssertFunc function cannot be null");
             try
             {
                 action();
             }
             catch (Exception temp)
             {
-                if (negated) throw new AssertionException($"Expected the function not to throw.", temp);
-                else return;
+                if (negated)
+                    throw new AssertionException($"Expected the function not to throw.", temp);
+                else
+                    return;
             }
-            if (negated) return;
+            if (negated)
+                return;
             throw new AssertionException($"Expected the function to throw.");
         }
     }

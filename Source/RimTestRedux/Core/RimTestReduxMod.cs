@@ -1,7 +1,7 @@
-﻿using RimTestRedux.Testing;
-using Verse;
+﻿using RimTestRedux.Core;
+using RimTestRedux.Testing;
 using UnityEngine;
-using RimTestRedux.Core;
+using Verse;
 
 namespace RimTestRedux
 {
@@ -14,7 +14,8 @@ namespace RimTestRedux
         /// <summary>
         /// Said entry point
         /// </summary>
-        public RimTestReduxMod(ModContentPack content) : base(content) //our constructor
+        public RimTestReduxMod(ModContentPack content)
+            : base(content) //our constructor
         {
             Settings = GetSettings<RimTestReduxSettings>();
             Explorer.ExploreAndRegisterAssemblies();
@@ -27,10 +28,12 @@ namespace RimTestRedux
                 Viewer.LogTestsResults();
             }
         }
+
         ///<summary>
         /// Settings getter
         ///</summary>
         public static RimTestReduxSettings Settings { get; private set; }
+
         ///<summary>
         /// Settings UI drawing logic
         ///</summary>
@@ -45,6 +48,4 @@ namespace RimTestRedux
         ///</summary>
         public override string SettingsCategory() => "RimTestRedux";
     }
-
-    
 }

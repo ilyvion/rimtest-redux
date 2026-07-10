@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace RimTestRedux.Util
 {
     /// <summary>
-    /// Dictionnary&lt;T, int&gt; auto defaulting to 0. Allows simple tallying syntax such as tally[element]++  
+    /// Dictionnary&lt;T, int&gt; auto defaulting to 0. Allows simple tallying syntax such as tally[element]++
     /// </summary>
     /// <example>
     /// <![CDATA[
@@ -19,7 +19,8 @@ namespace RimTestRedux.Util
     /// ]]>
     /// </example>
     /// <typeparam name="T">Enumeration</typeparam>
-    public class Tally<T> : Dictionary<T, int> where T : Enum
+    public class Tally<T> : Dictionary<T, int>
+        where T : Enum
     {
         /// <summary>
         /// </summary>

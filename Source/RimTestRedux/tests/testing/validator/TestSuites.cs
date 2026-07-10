@@ -5,17 +5,11 @@ using static RimTestRedux.Testing.Validator;
 
 namespace RimTestRedux.tests
 {
-    public static class MockValidTestSuite
-    {
-    }
+    public static class MockValidTestSuite { }
 
-    public class MockNonStaticTestSuite
-    {
-    }
+    public class MockNonStaticTestSuite { }
 
-    internal static class MockNonPublicTestSuite
-    {
-    }
+    internal static class MockNonPublicTestSuite { }
 
     [TestSuite]
     public static class TestSuites
@@ -53,8 +47,6 @@ namespace RimTestRedux.tests
             Assert(CheckTestSuiteIsStatic(null)).To.Be.False();
         }
 
-
-
         [Test]
         public static void PassWhenStatic()
         {
@@ -68,6 +60,7 @@ namespace RimTestRedux.tests
             Assert(CheckTestSuiteIsStatic(type)).To.Be.False();
             AssertFunc(() => IsValidTestSuite(type)).To.Throw();
         }
+
         [Test]
         public static void ThrowWhenInvalid()
         {
