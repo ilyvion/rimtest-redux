@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A new icon has been added to the developer debug toolbar (visible in Dev Mode). Clicking it opens the test runner directly, without having to go through the mod's settings.
+- Tests can now be marked with a `[ShouldThrow]` attribute to declare that they're expected to throw an exception. A specific exception type can optionally be required, e.g. `[ShouldThrow(typeof(ArgumentNullException))]`.
 
 ### Changed
 

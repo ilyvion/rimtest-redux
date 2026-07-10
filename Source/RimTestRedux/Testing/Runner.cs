@@ -27,21 +27,57 @@ public static class Runner
             TestExplorer.SetTestError(test, e);
             return;
         }
+        var expectedException = test.TryGetAttribute<ShouldThrowAttribute>();
+        var stopwatch = new Stopwatch();
         try
         {
-            var stopwatch = new Stopwatch();
             stopwatch.Start();
             // tests are static (null reference object) and do NOT accept arguments (null parameters array)
             _ = test.Invoke(null, null);
             stopwatch.Stop();
+
+            if (expectedException != null)
+            {
+                TestExplorer.SetTestStatus(test, TestStatus.ERROR);
+                TestExplorer.SetTestError(
+                    test,
+                    new ShouldHaveThrownException(
+                        expectedException.ExpectedType != null
+                            ? $"Expected an exception of type {expectedException.ExpectedType.Name} to be thrown, but none was."
+                            : "Should have thrown an exception."
+                    )
+                );
+                return;
+            }
+
             TimeElapsedExplorer.SetTestTimeElapsed(test, stopwatch.Elapsed.TotalMilliseconds);
             TestExplorer.SetTestStatus(test, TestStatus.PASS);
             TestExplorer.SetTestError(test, null);
         }
         catch (Exception e)
         {
+            stopwatch.Stop();
+
+            var actual = e is TargetInvocationException { InnerException: not null } tie
+                ? tie.InnerException
+                : e;
+
+            if (
+                expectedException != null
+                && (
+                    expectedException.ExpectedType == null
+                    || expectedException.ExpectedType.IsInstanceOfType(actual)
+                )
+            )
+            {
+                TimeElapsedExplorer.SetTestTimeElapsed(test, stopwatch.Elapsed.TotalMilliseconds);
+                TestExplorer.SetTestStatus(test, TestStatus.PASS);
+                TestExplorer.SetTestError(test, null);
+                return;
+            }
+
             TestExplorer.SetTestStatus(test, TestStatus.ERROR);
-            TestExplorer.SetTestError(test, e);
+            TestExplorer.SetTestError(test, actual);
         }
     }
 

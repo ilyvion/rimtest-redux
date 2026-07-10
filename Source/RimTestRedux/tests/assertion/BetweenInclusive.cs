@@ -17,44 +17,14 @@ internal static class BetweenInclusive
     public static void PassWhenEqualsBoth() => Assertion.Assert(1).To.Be.BetweenInclusive(1, 1);
 
     [Test]
-    public static void ThrowWhenUnder()
-    {
-        try
-        {
-            Assertion.Assert(-1).To.Be.BetweenInclusive(0, 2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenUnder() => Assertion.Assert(-1).To.Be.BetweenInclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenOver()
-    {
-        try
-        {
-            Assertion.Assert(3).To.Be.BetweenInclusive(0, 2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenOver() => Assertion.Assert(3).To.Be.BetweenInclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenInvalidLimits()
-    {
-        try
-        {
-            Assertion.Assert(1).To.Be.BetweenInclusive(2, 0);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenInvalidLimits() => Assertion.Assert(1).To.Be.BetweenInclusive(2, 0);
 }

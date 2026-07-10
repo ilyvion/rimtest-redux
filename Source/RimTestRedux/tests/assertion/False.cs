@@ -7,16 +7,6 @@ internal static class False
     public static void PassWhenFalse() => Assertion.Assert(false).To.Be.False();
 
     [Test]
-    public static void ThrowWhenNotFalse()
-    {
-        try
-        {
-            Assertion.Assert(true).To.Be.False();
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenNotFalse() => Assertion.Assert(true).To.Be.False();
 }

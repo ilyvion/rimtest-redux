@@ -8,86 +8,26 @@ internal static class BetweenExclusive
         Assertion.Assert(1).To.Be.BetweenExclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenEqualToMin()
-    {
-        try
-        {
-            Assertion.Assert(0).To.Be.BetweenExclusive(0, 2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenEqualToMin() => Assertion.Assert(0).To.Be.BetweenExclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenEqualToMax()
-    {
-        try
-        {
-            Assertion.Assert(2).To.Be.BetweenExclusive(0, 2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenEqualToMax() => Assertion.Assert(2).To.Be.BetweenExclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenEqualToBoth()
-    {
-        try
-        {
-            Assertion.Assert(1).To.Be.BetweenExclusive(1, 1);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenEqualToBoth() => Assertion.Assert(1).To.Be.BetweenExclusive(1, 1);
 
     [Test]
-    public static void ThrowWhenUnder()
-    {
-        try
-        {
-            Assertion.Assert(-1).To.Be.BetweenExclusive(0, 2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenUnder() => Assertion.Assert(-1).To.Be.BetweenExclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenOver()
-    {
-        try
-        {
-            Assertion.Assert(3).To.Be.BetweenExclusive(0, 2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenOver() => Assertion.Assert(3).To.Be.BetweenExclusive(0, 2);
 
     [Test]
-    public static void ThrowWhenInvalidLimits()
-    {
-        try
-        {
-            Assertion.Assert(1).To.Be.BetweenExclusive(2, 0);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenInvalidLimits() => Assertion.Assert(1).To.Be.BetweenExclusive(2, 0);
 }

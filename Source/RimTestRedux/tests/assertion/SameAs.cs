@@ -11,18 +11,11 @@ internal static class SameAs
     }
 
     [Test]
+    [ShouldThrow]
     public static void ThrowWhenNotSame()
     {
         IComparable mock = "a";
         IComparable mock2 = "b";
-        try
-        {
             Assertion.Assert(mock).To.Be.TheSame(mock2);
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
     }
 }

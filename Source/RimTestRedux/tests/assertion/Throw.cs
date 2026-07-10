@@ -8,16 +8,6 @@ internal static class Throw
         Assertion.AssertFunc(() => throw new ShouldHaveThrownException()).To.Throw();
 
     [Test]
-    public static void ThrowWhenNotThrow()
-    {
-        try
-        {
-            Assertion.AssertFunc(() => 1).To.Throw();
-        }
-        catch (Exception)
-        {
-            return;
-        }
-        throw new ShouldHaveThrownException("Should have thrown an exception.");
-    }
+    [ShouldThrow]
+    public static void ThrowWhenNotThrow() => Assertion.AssertFunc(() => 1).To.Throw();
 }
