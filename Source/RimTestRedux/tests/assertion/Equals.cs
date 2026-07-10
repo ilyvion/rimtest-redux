@@ -1,9 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-namespace RimTestRedux.Tests.Assertions;
+﻿namespace RimTestRedux.Tests.Assertions;
 
 [TestSuite]
-public static class Equals
+internal static class Equals
 {
     [Test]
     public static void PassWhenEqual() => Assertion.Assert(1).To.Be.EqualTo(1);

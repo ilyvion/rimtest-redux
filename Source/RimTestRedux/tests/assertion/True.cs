@@ -1,11 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-namespace RimTestRedux.Tests.Assertions;
+﻿namespace RimTestRedux.Tests.Assertions;
 
 [TestSuite]
-#pragma warning disable CA1716 // Identifiers should not match keywords
-public static class True
-#pragma warning restore CA1716
+internal static class True
 {
     [Test]
     public static void PassWhenTrue() => Assertion.Assert(true).To.Be.True();
@@ -24,5 +20,3 @@ public static class True
         throw new ShouldHaveThrownException("Should have thrown an exception.");
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

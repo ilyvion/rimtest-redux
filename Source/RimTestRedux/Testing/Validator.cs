@@ -12,14 +12,7 @@ internal static class Validator
         {
             throw new InvalidTestSuiteException($"{testSuite.Name}: test suite must be static.");
         }
-        if (!CheckTestSuiteIsPublic(testSuite))
-        {
-            throw new InvalidTestSuiteException($"{testSuite.Name}: test suite must be public.");
-        }
     }
-
-    public static bool CheckTestSuiteIsPublic(Type testSuite) =>
-        testSuite != null && testSuite.IsPublic;
 
     public static bool CheckTestSuiteIsStatic(Type testSuite) =>
         testSuite != null && testSuite.IsClass && testSuite.IsSealed && testSuite.IsAbstract;
@@ -43,13 +36,7 @@ internal static class Validator
         {
             throw new InvalidTestException($"{method.Name}: tests must be static.");
         }
-        if (!CheckTestIsPublic(method))
-        {
-            throw new InvalidTestException($"{method.Name}: tests must be public.");
-        }
     }
-
-    public static bool CheckTestIsPublic(MethodInfo method) => method != null && method.IsPublic;
 
     public static bool CheckTestIsStatic(MethodInfo method) => method != null && method.IsStatic;
 

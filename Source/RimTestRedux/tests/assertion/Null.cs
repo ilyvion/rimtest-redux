@@ -1,9 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-namespace RimTestRedux.Tests.Assertions;
+﻿namespace RimTestRedux.Tests.Assertions;
 
 [TestSuite]
-public static class Null
+internal static class Null
 {
     [Test]
     public static void PassWhenNull() => Assertion.Assert(null).To.Be.Null();

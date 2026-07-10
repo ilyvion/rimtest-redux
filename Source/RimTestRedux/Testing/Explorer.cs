@@ -695,7 +695,7 @@ public static class Explorer
 
         foreach (
             var test in testSuite
-                .GetMethods()
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static)
                 .Where(info => info.TryGetAttribute<TestAttribute>() != null)
         )
         {

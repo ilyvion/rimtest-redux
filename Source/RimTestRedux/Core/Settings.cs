@@ -1,6 +1,4 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using RimTestRedux.Testing;
 
@@ -16,6 +14,9 @@ public class Settings : ModSettings
     /// </summary>
     private bool _runOwnTests;
 
+    /// <summary>
+    /// Decides if the mod run it's own tests or not
+    /// </summary>
     public bool RunOwnTests
     {
         get => _runOwnTests;
@@ -27,6 +28,9 @@ public class Settings : ModSettings
     /// </summary>
     private bool _runAtStartup = true;
 
+    /// <summary>
+    /// Decides if the mod runs all the available non filtered tests at launch or not
+    /// </summary>
     public bool RunAtStartup
     {
         get => _runAtStartup;
@@ -713,11 +717,9 @@ public class Settings : ModSettings
             }
             _ = Widgets.TextArea(
                 messageRect,
-                text.Replace("\n", " ", StringComparison.InvariantCulture),
+                text.Replace("\n", " ", StringComparison.Ordinal),
                 true
             );
         }
     }
 }
-
-#pragma warning restore CS1591

@@ -1,12 +1,10 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-using RimTestRedux.Testing;
+﻿using RimTestRedux.Testing;
 
 namespace RimTestRedux.Tests;
 
-public class MockTests
+internal sealed class MockTests
 {
-    protected static void NonPublicTest() { }
+    internal static void NonPublicTest() { }
 
 #pragma warning disable CA1822 // Mark members as static
     public void NonStaticTest() { }
@@ -24,15 +22,19 @@ public class MockTests
 
 [TestSuite]
 #pragma warning disable CA1724
-public static class Testing
+internal static class Testing
 #pragma warning restore CA1724
 {
     private static MethodInfo GetMethodInfo(string methodName) =>
-        typeof(MockTests).GetTypeInfo().GetMethod(methodName);
-
-    [Test]
-    public static void PassWhenPublic() =>
-        Assertion.Assert(Validator.CheckTestIsPublic(GetMethodInfo("ValidTest"))).To.Be.True();
+        typeof(MockTests)
+            .GetTypeInfo()
+            .GetMethod(
+                methodName,
+                BindingFlags.Public
+                    | BindingFlags.NonPublic
+                    | BindingFlags.Static
+                    | BindingFlags.Instance
+            );
 
     [Test]
     public static void PassWhenStatic() =>
@@ -66,15 +68,16 @@ public static class Testing
     [Test]
     public static void ChecksAreFalseWhenNull()
     {
-        Assertion.Assert(Validator.CheckTestIsPublic(null!)).To.Be.False();
         Assertion.Assert(Validator.CheckTestIsStatic(null!)).To.Be.False();
         Assertion.Assert(Validator.CheckTestReturnsVoid(null!)).To.Be.False();
         Assertion.Assert(Validator.CheckTestIsParameterFree(null!)).To.Be.False();
     }
 
     [Test]
-    public static void CheckIsFalseWhenNonPublic() =>
-        Assertion.Assert(Validator.CheckTestIsPublic(GetMethodInfo("NonPublicTest"))).To.Be.False();
+    public static void PassWhenNonPublic() =>
+        Assertion
+            .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonPublicTest")))
+            .Not.To.Throw();
 
     [Test]
     public static void CheckIsFalseWhenNonStatic() =>
@@ -106,11 +109,5 @@ public static class Testing
         Assertion
             .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonStaticTest")))
             .To.Throw();
-
-        Assertion
-            .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonPublicTest")))
-            .To.Throw();
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

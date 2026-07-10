@@ -1,17 +1,17 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-using RimTestRedux.Testing;
+﻿using RimTestRedux.Testing;
 
 namespace RimTestRedux.Tests;
 
+/// <summary>Mock test suite that is valid, used to validate <see cref="Validator.IsValidTestSuite"/>.</summary>
 public static class MockValidTestSuite { }
 
+/// <summary>Mock test suite that is not static, used to validate <see cref="Validator.CheckTestSuiteIsStatic"/>.</summary>
 public class MockNonStaticTestSuite { }
 
 internal static class MockNonPublicTestSuite { }
 
 [TestSuite]
-public static class TestSuites
+internal static class TestSuites
 {
     [Test]
     public static void PassWhenValid() =>
@@ -20,27 +20,18 @@ public static class TestSuites
             .Not.To.Throw();
 
     [Test]
-    public static void PassWhenPublic() =>
-        Assertion.Assert(Validator.CheckTestSuiteIsPublic(typeof(MockValidTestSuite))).To.Be.True();
-
-    [Test]
-    public static void ThrowWhenNonPublic()
-    {
-        var type = typeof(MockNonPublicTestSuite);
-        Assertion.Assert(Validator.CheckTestSuiteIsPublic(type)).To.Be.False();
-        Assertion.AssertFunc(() => Validator.IsValidTestSuite(type)).To.Throw();
-    }
+    public static void PassWhenNonPublic() =>
+        Assertion
+            .AssertFunc(() => Validator.IsValidTestSuite(typeof(MockNonPublicTestSuite)))
+            .Not.To.Throw();
 
     [Test]
     public static void IsValidTestSuiteThrowWhenNull() =>
         Assertion.AssertFunc(() => Validator.IsValidTestSuite(null!)).To.Throw();
 
     [Test]
-    public static void ChecksAreFalseWhenNull()
-    {
-        Assertion.Assert(Validator.CheckTestSuiteIsPublic(null!)).To.Be.False();
+    public static void ChecksAreFalseWhenNull() =>
         Assertion.Assert(Validator.CheckTestSuiteIsStatic(null!)).To.Be.False();
-    }
 
     [Test]
     public static void PassWhenStatic() =>
@@ -55,16 +46,8 @@ public static class TestSuites
     }
 
     [Test]
-    public static void ThrowWhenInvalid()
-    {
+    public static void ThrowWhenInvalid() =>
         Assertion
             .AssertFunc(() => Validator.IsValidTestSuite(typeof(MockNonStaticTestSuite)))
             .To.Throw();
-
-        Assertion
-            .AssertFunc(() => Validator.IsValidTestSuite(typeof(MockNonPublicTestSuite)))
-            .To.Throw();
-    }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

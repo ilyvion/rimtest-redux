@@ -1,9 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-
-namespace RimTestRedux.Tests.Assertions;
+﻿namespace RimTestRedux.Tests.Assertions;
 
 [TestSuite]
-public static class LessThan
+internal static class LessThan
 {
     [Test]
     public static void PassWhenLess() => Assertion.Assert(1).To.Be.LessThan(2);

@@ -1,8 +1,7 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace RimTestRedux.Tests.Assertions;
+﻿namespace RimTestRedux.Tests.Assertions;
 
 [TestSuite]
-public static class BetweenExclusive
+internal static class BetweenExclusive
 {
     [Test]
     public static void PassWhenBetweenExclusive() =>
@@ -92,4 +91,3 @@ public static class BetweenExclusive
         throw new ShouldHaveThrownException("Should have thrown an exception.");
     }
 }
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

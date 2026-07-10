@@ -36,6 +36,14 @@ public class RimTestReduxMod : Mod
     public RimTestReduxMod(ModContentPack content)
         : base(content) //our constructor
     {
+        // This is kind of stupid, but also kind of correct. Correct wins.
+        if (content == null)
+        {
+            throw new ArgumentNullException(nameof(content));
+        }
+
+        Instance = this;
+
         Explorer.ExploreAndRegisterAssemblies();
         StatusExplorer.UpdateAllStatusCounts();
 
