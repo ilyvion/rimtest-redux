@@ -35,6 +35,7 @@ public static class TimeElapsedExplorer
     public static void UpdateAssemblyTimeElapsed(Assembly asm)
     {
         double totaltime = 0;
+        var anyValid = false;
         foreach (var ts in Assembly2TestSuiteLink.GetTestSuites(asm))
         {
             UpdateTestSuiteTimeElapsed(ts);
@@ -42,9 +43,10 @@ public static class TimeElapsedExplorer
             if (testtime != -1)
             {
                 totaltime += testtime;
+                anyValid = true;
             }
         }
-        SetAssemblyTimeElapsed(asm, totaltime);
+        SetAssemblyTimeElapsed(asm, anyValid ? totaltime : -1);
     }
 
     /// <summary>
@@ -78,15 +80,17 @@ public static class TimeElapsedExplorer
     public static void UpdateTestSuiteTimeElapsed(Type ts)
     {
         double totaltime = 0;
+        var anyValid = false;
         foreach (var test in TestSuite2TestLink.GetTests(ts))
         {
             var testtime = GetTestTimeElapsed(test);
             if (testtime != -1)
             {
                 totaltime += testtime;
+                anyValid = true;
             }
         }
-        SetTestSuiteTimeElapsed(ts, totaltime);
+        SetTestSuiteTimeElapsed(ts, anyValid ? totaltime : -1);
     }
 
     /// <summary>

@@ -22,5 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - The test runner's search box is no longer case-sensitive, so searching for a test or suite no longer requires typing its name with exact capitalization.
+- An assembly or test suite that hasn't been run yet now correctly shows "--" for its duration instead of "0 ms".
 
 [Unreleased]: https://github.com/ilyvion/rimtest-redux/compare/v0.1.0...HEAD
