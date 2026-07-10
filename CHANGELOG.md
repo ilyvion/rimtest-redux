@@ -18,4 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The test runner window has been redesigned to look like a modern CI test report. Each assembly now shows an at-a-glance summary (total/passed/failed/skipped/not-run counts) followed by its test suites, each with a duration and a colored result bar; clicking "Details" on a test suite opens a window listing its individual tests, with an expandable row for each failed or skipped test showing the reason. The old toolbar of bare numbers and checkmarks is gone; running tests, viewing the debug log, and collapsing/expanding assemblies are now icon buttons above the results.
 - The test runner now opens in its own window instead of being embedded in the Mod Options tab. The Mod Options tab still has the startup checkboxes and an "Open Test Runner" button for those who prefer to launch it from there.
 
+### Fixed
+
+- The test runner's search box is no longer case-sensitive, so searching for a test or suite no longer requires typing its name with exact capitalization.
+
 [Unreleased]: https://github.com/ilyvion/rimtest-redux/compare/v0.1.0...HEAD

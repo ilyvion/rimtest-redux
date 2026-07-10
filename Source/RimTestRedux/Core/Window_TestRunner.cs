@@ -113,7 +113,7 @@ internal sealed class Window_TestRunner : Window
             if (searchRegexTmp != searchRegex)
             {
                 searchRegex = searchRegexTmp;
-                FilteredExplorer.UpdateFilter(new Regex(searchRegex));
+                FilteredExplorer.UpdateFilter(new Regex(searchRegex, RegexOptions.IgnoreCase));
             }
         }
         catch
