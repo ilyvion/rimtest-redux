@@ -1,0 +1,6 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace>RimTestRedux</RootNamespace>
+        <AssemblyName>RimTestRedux</AssemblyName>
+    </PropertyGroup>
+</Project>

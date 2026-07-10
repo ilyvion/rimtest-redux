@@ -1,0 +1,25 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.002.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RimTestRedux", "Source\RimTestRedux\RimTestRedux.csproj", "{2FCBB6FD-45D0-4696-96C7-502D1B8ACD3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FCBB6FD-45D0-4696-96C7-502D1B8ACD3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FCBB6FD-45D0-4696-96C7-502D1B8ACD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FCBB6FD-45D0-4696-96C7-502D1B8ACD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FCBB6FD-45D0-4696-96C7-502D1B8ACD3C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ED6F795B-0F56-4AD5-9683-561A640BBC28}
+	EndGlobalSection
+EndGlobal
