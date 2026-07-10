@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using RimTestRedux.Util;
 
 namespace RimTestRedux.Testing;
 
@@ -465,6 +466,23 @@ public static class AssemblyExplorer
     /// <returns>The current registered Exception else null if none registered</returns>
     public static Exception? GetAssemblyError(Assembly asm) =>
         asm2Error.TryGetValue(asm, out var value) ? value : null;
+
+    /// <summary>
+    /// </summary>
+    /// <param name="asm"></param>
+    /// <returns>A tally of how many of this assembly's (filtered) tests are at each <see cref="TestStatus"/>, summed across all of its test suites.</returns>
+    public static Tally<TestStatus> TallyTestStatuses(Assembly asm)
+    {
+        var tally = new Tally<TestStatus>();
+        foreach (var ts in FilteredExplorer.GetFilteredTestSuites(asm))
+        {
+            foreach (var (status, count) in TestSuiteExplorer.TallyTestStatuses(ts))
+            {
+                tally[status] += count;
+            }
+        }
+        return tally;
+    }
 }
 
 /// <summary>
@@ -552,6 +570,20 @@ public static class TestSuiteExplorer
     /// <returns>current registered Exception else null if none registered</returns>
     public static Exception? GetTestSuiteError(Type testSuite) =>
         testSuite2Error.TryGetValue(testSuite, out var value) ? value : null;
+
+    /// <summary>
+    /// </summary>
+    /// <param name="testSuite"></param>
+    /// <returns>A tally of how many of this suite's (filtered) tests are at each <see cref="TestStatus"/>.</returns>
+    public static Tally<TestStatus> TallyTestStatuses(Type testSuite)
+    {
+        var tally = new Tally<TestStatus>();
+        foreach (var test in FilteredExplorer.GetFilteredTests(testSuite))
+        {
+            tally[TestExplorer.GetTestStatus(test)]++;
+        }
+        return tally;
+    }
 }
 
 /// <summary>

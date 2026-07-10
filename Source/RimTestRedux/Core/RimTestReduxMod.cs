@@ -64,3 +64,9 @@ public class RimTestReduxMod : IlyvionMod
         Settings.DoWindowContents(inRect);
     }
 }
+
+/// <summary>
+/// Indicates that a class or struct supports hot swapping at runtime.
+/// </summary>
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
+public sealed class HotSwappableAttribute : Attribute { }

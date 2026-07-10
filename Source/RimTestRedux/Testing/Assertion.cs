@@ -88,7 +88,10 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
     /// </summary>
     /// <remarks>Used by every check other than Null(), which are meaningless for a null value.</remarks>
     private IComparable RequireNonNull() =>
-        thing ?? throw new AssertionException("Expected a non-null value, but the asserted value was null.");
+        thing
+        ?? throw new AssertionException(
+            "Expected a non-null value, but the asserted value was null."
+        );
 
     /// <summary>
     /// Negation grammar link, negates the current assertion.

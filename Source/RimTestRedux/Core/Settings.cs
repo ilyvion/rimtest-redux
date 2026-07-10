@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using RimTestRedux.Testing;
 
 namespace RimTestRedux.Core;
@@ -38,30 +37,26 @@ public class Settings : ModSettings
     }
 
     private readonly Dictionary<Assembly, bool> assemblyVisibility = [];
-    private readonly Dictionary<Type, bool> testSuiteVisibility = [];
 
-    private const int HEIGHT_ROW = 40;
     private const int HEIGHT_CONTROLS = 26;
-    private const int WIDTH_ROW_RUN = 40;
-    private const int WIDTH_TOGGLE_LABEL = 300;
-    private const int WIDTH_TIME_LABEL = 40;
-    private const int WIDTH_DETAILS_BTN = 80;
-    private const int ERROR_CHAR_LIMIT = 120;
-    private const int WIDTH_ERROR_LEVEL = 7;
-    private const int WIDTH_LEVEL_INDENT = WIDTH_ERROR_LEVEL;
-
-    private const int WIDTH_CONTROLS_ROW_LABEL = 80;
     private const int SIZE_CONTROLS_ICON_BTN = HEIGHT_CONTROLS;
-    private const int WIDTH_CONTROLS_STATUS_COUNT = 26;
-    private const int WIDTH_CONTROLS_STATUS_BADGE =
-        SIZE_CONTROLS_ICON_BTN + 4 + WIDTH_CONTROLS_STATUS_COUNT;
     private const int WIDTH_CONTROLS_CONTROL_GAP = 6;
     private const int WIDTH_CONTROLS_SECTION_GAP = 18;
 
-    private static Color COLOR_FAIL = new(0.878f, 0.224f, 0.231f);
-    private static Color COLOR_WARN = new(1f, 0.639f, 0.267f);
-    private static Color COLOR_PASS = new(0.706f, 0.933f, 0.251f);
-    private static Color COLOR_UNKNOWN = new(0.184f, 0.533f, 0.631f);
+    private const int WIDTH_ASSEMBLY_RUN_BTN = SIZE_CONTROLS_ICON_BTN;
+    private const int WIDTH_ASSEMBLY_TIME = 70;
+    private const int HEIGHT_ASSEMBLY_STATS = 50;
+    private const int WIDTH_ASSEMBLY_STAT = 90;
+
+    private const int HEIGHT_SUITE_ROW = 40;
+    private const int WIDTH_SUITE_RUN_BTN = 24;
+    private const int WIDTH_SUITE_TIME = 60;
+    private const int WIDTH_SUITE_RESULT_BAR = 140;
+    private const int HEIGHT_SUITE_RESULT_BAR = 10;
+    private const int WIDTH_SUITE_DETAILS_BTN = 80;
+    private const int HEIGHT_SUITE_DETAILS_BTN = 28;
+
+    private const int GAP_ASSEMBLY_BLOCK = 14;
 
     private string searchRegex = @"";
 
@@ -98,16 +93,6 @@ public class Settings : ModSettings
             "if enabled, RimTestRedux will run every valid tests at the game startup."
         );
         options.GapLine();
-        //if (options.ButtonText("Run everything"))
-        //{
-        //    Runner.RunAllRegisteredTests();
-        //    StatusExplorer.UpdateAllStatusCounts();
-        //}
-        //if(options.ButtonText("Log all current results to Debug log"))
-        //{
-        //    Viewer.LogTestsResults();
-        //}
-        //options.GapLine();
         DrawControls(options);
         options.End();
 
@@ -116,144 +101,27 @@ public class Settings : ModSettings
         viewRect.Set(viewRect.xMin, viewRect.yMin, viewRect.width, CalcTotalHeight()); // update height to accomodate to all the data
 
         var testlisting = new Listing_Standard();
-        //testlisting.BeginScrollView(GUIRect, ref ScrollPosition, ref viewRect);
         Widgets.BeginScrollView(GUIRect, ref ScrollPosition, viewRect, true);
         GUI.BeginGroup(viewRect);
         testlisting.Begin(viewRect);
-        DrawTests(testlisting);
+        DrawAssemblies(testlisting);
         testlisting.End();
         GUI.EndGroup();
-        //testlisting.EndScrollView(ref viewRect);
         Widgets.EndScrollView();
 
         //reset fonts
         Text.Font = GameFont.Small;
         Text.Anchor = TextAnchor.UpperLeft;
-
-        //Widgets.CustomButtonText(ref labelRect, "test assembly", Color.black, Color.white, Color.red);
-
-        // RimTestRedux -- displayA  displayB ...
-        //                                 Status: ✘ERROR  !WARNING  ➥SKIPPED  ?NOT RAN  ✓PASS
-        // Assemblies: |collapse| |expand |         [x] 2    [v] 1                [v] 1    [v] 1
-        // TestSuites: |collapse| |expand |         [x] 3    [v] 1    [x] 1       [v] 12   [v] 4
-        // Tests:      |run all | |log all|         [x] 10            [x] 4       [v] 23   [v] 16
-        // filter regex: |_________________
-        // V THIS PART V
-        // |run| |time|   ||v [v] Assembly 1|       |
-        // |run| |time|   ||^ [x] Assembly 2|       | error msg
-        // |run| |time|    ||v [v] TestSuite 2.1|   |
-        // |run| |time|    ||^ [x] TestSuite 2.2|   | error msg
-        // |run| |time|     ||v [x] Test 2.2.1|     | error msg
-        // |run| |time|     ||^ [v] Test 2.2.1|     |
-        // ...
-
-        //TODO Status filter , utiliser colonnes + sliders
-        //-----          [Skipped]  |  [Passed]
-        //[Assemblies]   [x] [100]  |
-        //[Test Suites][x][010] |
-        //[Tests][x][000] |
-
-        // TODO Statuses symbols
-        // ?? pas ouf
-        // !! pas ouf
-
-        // TODO control rows size doivent être aussi gros que les checkbox.
     }
 
     private void DrawControls(Listing_Standard bar)
     {
-        var rowAsm = bar.GetRect(HEIGHT_CONTROLS);
-        var rowTS = bar.GetRect(HEIGHT_CONTROLS);
-        var rowT = bar.GetRect(HEIGHT_CONTROLS);
-        var rowSearch = bar.GetRect(HEIGHT_CONTROLS);
+        var row = bar.GetRect(HEIGHT_CONTROLS);
 
-        // ASSEMBLIES - COLLAPSE / EXPAND - STATUS FILTERS
-        _ = TakeLeft(ref rowAsm, WIDTH_CONTROLS_ROW_LABEL, out var asmLabelRect);
-        Widgets.Label(asmLabelRect, "Assemblies");
-        DrawIconButton(ref rowAsm, Icons.Collapse, "Collapse all assemblies", CollapseAllAssemblies);
-        DrawIconButton(ref rowAsm, Icons.Expand, "Expand all assemblies", ExpandAllAssemblies);
-        TakeLeft(ref rowAsm, WIDTH_CONTROLS_SECTION_GAP);
-
-        DrawStatusFilter(
-            ref rowAsm,
-            Icons.StatusError,
-            "Failed",
-            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.ERROR),
-            ref FilteredExplorer.failEnabledAsm
-        );
-        DrawStatusFilter(
-            ref rowAsm,
-            Icons.StatusWarning,
-            "Warnings",
-            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.WARNING),
-            ref FilteredExplorer.warningEnabledAsm
-        );
-        SkipColumn(ref rowAsm); // assemblies have no "skipped" status
-        DrawStatusFilter(
-            ref rowAsm,
-            Icons.StatusUnknown,
-            "Not run",
-            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.UNKNOWN),
-            ref FilteredExplorer.unknownEnabledAsm
-        );
-        DrawStatusFilter(
-            ref rowAsm,
-            Icons.StatusPass,
-            "Passed",
-            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.PASS),
-            ref FilteredExplorer.passEnabledAsm
-        );
-
-        // TEST SUITES - COLLAPSE / EXPAND - STATUS FILTERS
-        _ = TakeLeft(ref rowTS, WIDTH_CONTROLS_ROW_LABEL, out var tsLabelRect);
-        Widgets.Label(tsLabelRect, "Test Suites");
-        DrawIconButton(ref rowTS, Icons.Collapse, "Collapse all test suites", CollapseAllTestSuites);
-        DrawIconButton(ref rowTS, Icons.Expand, "Expand all test suites", ExpandAllTestSuites);
-        TakeLeft(ref rowTS, WIDTH_CONTROLS_SECTION_GAP);
-
-        DrawStatusFilter(
-            ref rowTS,
-            Icons.StatusError,
-            "Failed",
-            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.ERROR),
-            ref FilteredExplorer.failEnabledTS
-        );
-        DrawStatusFilter(
-            ref rowTS,
-            Icons.StatusWarning,
-            "Warnings",
-            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.WARNING),
-            ref FilteredExplorer.warningEnabledTS
-        );
-        DrawStatusFilter(
-            ref rowTS,
-            Icons.StatusSkip,
-            "Skipped",
-            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.SKIP),
-            ref FilteredExplorer.skipEnabledTS
-        );
-        DrawStatusFilter(
-            ref rowTS,
-            Icons.StatusUnknown,
-            "Not run",
-            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.UNKNOWN),
-            ref FilteredExplorer.unknownEnabledTS
-        );
-        DrawStatusFilter(
-            ref rowTS,
-            Icons.StatusPass,
-            "Passed",
-            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.PASS),
-            ref FilteredExplorer.passEnabledTS
-        );
-
-        // TESTS - RUN ALL / LOG ALL - STATUS FILTERS
-        _ = TakeLeft(ref rowT, WIDTH_CONTROLS_ROW_LABEL, out var tLabelRect);
-        Widgets.Label(tLabelRect, "Tests");
         DrawIconButton(
-            ref rowT,
+            ref row,
             Icons.Run,
-            "Run all tests",
+            "Run every registered test",
             () =>
             {
                 Runner.RunAllRegisteredTests();
@@ -261,47 +129,29 @@ public class Settings : ModSettings
                 TimeElapsedExplorer.UpdateAllAssembliesTimeElapsed();
             }
         );
-        DrawIconButton(ref rowT, Icons.Log, "Log all current results to the debug log", Viewer.LogTestsResults);
-        TakeLeft(ref rowT, WIDTH_CONTROLS_SECTION_GAP);
+        DrawIconButton(
+            ref row,
+            Icons.Log,
+            "Log all current results to the debug log",
+            Viewer.LogTestsResults
+        );
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_SECTION_GAP);
 
-        DrawStatusFilter(
-            ref rowT,
-            Icons.StatusError,
-            "Failed",
-            StatusExplorer.GetTestStatusCount(TestStatus.ERROR),
-            ref FilteredExplorer.failEnabledT
-        );
-        SkipColumn(ref rowT); // tests have no "warning" status of their own
-        DrawStatusFilter(
-            ref rowT,
-            Icons.StatusSkip,
-            "Skipped",
-            StatusExplorer.GetTestStatusCount(TestStatus.SKIP),
-            ref FilteredExplorer.skipEnabledT
-        );
-        DrawStatusFilter(
-            ref rowT,
-            Icons.StatusUnknown,
-            "Not run",
-            StatusExplorer.GetTestStatusCount(TestStatus.UNKNOWN),
-            ref FilteredExplorer.unknownEnabledT
-        );
-        DrawStatusFilter(
-            ref rowT,
-            Icons.StatusPass,
-            "Passed",
-            StatusExplorer.GetTestStatusCount(TestStatus.PASS),
-            ref FilteredExplorer.passEnabledT
-        );
+        DrawIconButton(ref row, Icons.Collapse, "Collapse all assemblies", CollapseAllAssemblies);
+        DrawIconButton(ref row, Icons.Expand, "Expand all assemblies", ExpandAllAssemblies);
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_SECTION_GAP);
 
-        // SEARCH
-        _ = TakeLeft(ref rowSearch, WIDTH_CONTROLS_ROW_LABEL, out var searchIconRect);
-        GUI.DrawTexture(searchIconRect.LeftPartPixels(SIZE_CONTROLS_ICON_BTN), Icons.Search);
-        TooltipHandler.TipRegion(searchIconRect, "Filter the tree below by name (regular expression)");
+        _ = RectCursor.TakeLeft(ref row, SIZE_CONTROLS_ICON_BTN, out var searchIconRect);
+        GUI.DrawTexture(searchIconRect, Icons.Search);
+        TooltipHandler.TipRegion(
+            searchIconRect,
+            "Filter the results below by name (regular expression)"
+        );
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
 
         try
         {
-            var searchRegexTmp = Widgets.TextField(rowSearch, searchRegex);
+            var searchRegexTmp = Widgets.TextField(row, searchRegex);
             if (searchRegexTmp != searchRegex)
             {
                 searchRegex = searchRegexTmp;
@@ -314,115 +164,31 @@ public class Settings : ModSettings
         }
     }
 
-    /// <summary>
-    /// Cuts <paramref name="width"/> pixels off the left of <paramref name="row"/>, returning
-    /// them as <paramref name="taken"/> and advancing <paramref name="row"/> past them (plus a
-    /// small gap).
-    /// </summary>
-    private static Rect TakeLeft(ref Rect row, float width, out Rect taken)
+    private static void DrawIconButton(ref Rect row, Texture2D icon, string tooltip, Action onClick)
     {
-        taken = row.LeftPartPixels(width);
-        row = row.RightPartPixels(row.width - width);
-        return taken;
-    }
-
-    private static void TakeLeft(ref Rect row, float width) => _ = TakeLeft(ref row, width, out _);
-
-    private static void DrawIconButton(
-        ref Rect row,
-        Texture2D icon,
-        string tooltip,
-        Action onClick
-    )
-    {
-        _ = TakeLeft(ref row, SIZE_CONTROLS_ICON_BTN, out var rect);
+        _ = RectCursor.TakeLeft(ref row, SIZE_CONTROLS_ICON_BTN, out var rect);
         TooltipHandler.TipRegion(rect, tooltip);
         if (Widgets.ButtonImage(rect, icon))
         {
             onClick();
         }
-        TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
-    }
-
-    /// <summary>
-    /// Advances <paramref name="row"/> past a status filter's worth of space without drawing
-    /// anything, so that rows whose entity type doesn't support a given status (e.g. assemblies
-    /// have no "skipped" status) still line up column-for-column with rows that do.
-    /// </summary>
-    private static void SkipColumn(ref Rect row)
-    {
-        TakeLeft(ref row, WIDTH_CONTROLS_STATUS_BADGE);
-        TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
-    }
-
-    private static void DrawStatusFilter(
-        ref Rect row,
-        Texture2D icon,
-        string label,
-        int count,
-        ref bool enabled
-    )
-    {
-        _ = TakeLeft(ref row, WIDTH_CONTROLS_STATUS_BADGE, out var rect);
-        var iconRect = new Rect(rect.x, rect.y, SIZE_CONTROLS_ICON_BTN, SIZE_CONTROLS_ICON_BTN);
-        var countRect = new Rect(
-            iconRect.xMax + 4f,
-            rect.y,
-            rect.width - SIZE_CONTROLS_ICON_BTN - 4f,
-            rect.height
-        );
-
-        if (Mouse.IsOver(rect))
-        {
-            Widgets.DrawHighlight(rect);
-        }
-
-        var prevColor = GUI.color;
-        GUI.color = enabled ? Color.white : new Color(1f, 1f, 1f, 0.35f);
-        GUI.DrawTexture(iconRect, icon);
-        GUI.color = prevColor;
-
-        var prevAnchor = Text.Anchor;
-        Text.Anchor = TextAnchor.MiddleLeft;
-        Widgets.Label(countRect, $"{count}");
-        Text.Anchor = prevAnchor;
-
-        TooltipHandler.TipRegion(
-            rect,
-            $"{label}: {count}\n\nClick to {(enabled ? "hide" : "show")} {label} results."
-        );
-
-        if (Widgets.ButtonInvisible(rect))
-        {
-            enabled = !enabled;
-        }
-
-        TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
     }
 
     private int CalcTotalHeight()
     {
-        var count = 0;
+        var height = 0;
         foreach (var asm in FilteredExplorer.GetFilteredAssemblies())
         {
-            count += 1;
-            if (!GetAssemblyVisibility(asm))
+            // name row + stat cards + gapline + "Test Suites" sub-header, all always visible
+            height += HEIGHT_CONTROLS + HEIGHT_ASSEMBLY_STATS + 4 + HEIGHT_CONTROLS;
+            if (GetAssemblyVisibility(asm))
             {
-                continue;
+                height += FilteredExplorer.GetFilteredTestSuites(asm).Count() * HEIGHT_SUITE_ROW;
             }
-
-            foreach (var ts in FilteredExplorer.GetFilteredTestSuites(asm))
-            {
-                count += 1;
-                if (!GetTestSuiteVisibility(ts))
-                {
-                    continue;
-                }
-
-                count += FilteredExplorer.GetFilteredTests(ts).EnumerableCount();
-            }
+            height += GAP_ASSEMBLY_BLOCK;
         }
-        return count * HEIGHT_ROW;
+        return height;
     }
 
     private void ToggleAllAssemblies(bool toggle)
@@ -437,26 +203,11 @@ public class Settings : ModSettings
 
     private void ExpandAllAssemblies() => ToggleAllAssemblies(true);
 
-    private void ToggleAllTestSuites(bool toggle)
+    private void DrawAssemblies(Listing_Standard listing)
     {
         foreach (var asm in FilteredExplorer.GetFilteredAssemblies())
         {
-            foreach (var ts in FilteredExplorer.GetFilteredTestSuites(asm))
-            {
-                testSuiteVisibility[ts] = toggle;
-            }
-        }
-    }
-
-    private void CollapseAllTestSuites() => ToggleAllTestSuites(false);
-
-    private void ExpandAllTestSuites() => ToggleAllTestSuites(true);
-
-    private void DrawTests(Listing_Standard listing)
-    {
-        foreach (var asm in FilteredExplorer.GetFilteredAssemblies())
-        {
-            DrawAssemblyLine(listing, asm);
+            DrawAssemblyBlock(listing, asm);
         }
     }
 
@@ -474,230 +225,184 @@ public class Settings : ModSettings
     private void ToggleAssemblyVisibility(Assembly asm) =>
         assemblyVisibility[asm] = !GetAssemblyVisibility(asm);
 
-    private void DrawAssemblyLine(Listing_Standard listing, Assembly asm)
+    private void DrawAssemblyBlock(Listing_Standard listing, Assembly asm)
     {
-        var row = listing.GetRect(HEIGHT_ROW);
-        var runBtnRect = row.LeftPartPixels(WIDTH_ROW_RUN);
-        var timeRect = row.RightPartPixels(row.width - runBtnRect.xMax)
-            .LeftPartPixels(WIDTH_TIME_LABEL);
-        var errorRect = row.RightPartPixels(row.width - (timeRect.xMax + (WIDTH_LEVEL_INDENT * 0)))
-            .LeftPartPixels(WIDTH_ERROR_LEVEL);
-        var toggleLabelRect = row.RightPartPixels(row.width - errorRect.xMax)
-            .LeftPartPixels(WIDTH_TOGGLE_LABEL);
-        var messageRect = row.RightPartPixels(row.width - toggleLabelRect.xMax);
-        messageRect = messageRect.LeftPartPixels(messageRect.width - WIDTH_DETAILS_BTN);
-        var detailsRect = row.RightPartPixels(WIDTH_DETAILS_BTN);
+        // header: name .......... [run] time -- always visible, does not collapse
+        var headerRow = listing.GetRect(HEIGHT_CONTROLS);
+        var actionsRect = headerRow.RightPartPixels(WIDTH_ASSEMBLY_RUN_BTN + WIDTH_ASSEMBLY_TIME);
+        var nameRect = headerRow.LeftPartPixels(
+            headerRow.width - actionsRect.width - WIDTH_CONTROLS_CONTROL_GAP
+        );
 
-        Text.Font = GameFont.Tiny;
-        Text.Anchor = TextAnchor.MiddleCenter;
-        // test run button
-        if (Widgets.ButtonText(runBtnRect, "run"))
-        //    if (Widgets.ButtonText(new Rect(new Vector2(row.xMin, row.yMin + currentRow * HEIGHT_ROW + HEIGHT_OPTIONS), SIZE_RUN_BTN), "run"))
-        {
-            Runner.RunAssembly(asm);
-            TimeElapsedExplorer.UpdateAssemblyTimeElapsed(asm);
-        }
-
-        // Todo time data
-        var timeElapsed = TimeElapsedExplorer.GetAssemblyTimeElapsed(asm);
-        Widgets.Label(timeRect, $"{(timeElapsed == -1 ? "--" : $"{timeElapsed}")} ms");
-
-        // error level tick
-        var color = AssemblyExplorer.GetAssemblyStatus(asm) switch
-        {
-            AssemblyStatus.ERROR => COLOR_FAIL,
-            AssemblyStatus.WARNING => COLOR_WARN,
-            AssemblyStatus.PASS => COLOR_PASS,
-            AssemblyStatus.UNKNOWN => COLOR_UNKNOWN,
-            _ => throw new NotImplementedException(),
-        };
-        Widgets.DrawBoxSolid(errorRect, color);
-
-        // collapse / expand button
         Text.Font = GameFont.Medium;
         Text.Anchor = TextAnchor.MiddleLeft;
-        var labelbuilder = new StringBuilder();
-        _ = labelbuilder.Append(GetAssemblyVisibility(asm) ? "[-] " : "[+] ");
-        _ = labelbuilder.Append(
-            $"{AssemblyStatusExtension.StatusSymbol(AssemblyExplorer.GetAssemblyStatus(asm))} "
+        Widgets.Label(nameRect, asm.GetName().Name);
+        Text.Font = GameFont.Small;
+
+        DrawIconButton(
+            ref actionsRect,
+            Icons.Run,
+            "Run all tests in this assembly",
+            () =>
+            {
+                Runner.RunAssembly(asm);
+                StatusExplorer.UpdateAllStatusCounts();
+                TimeElapsedExplorer.UpdateAssemblyTimeElapsed(asm);
+            }
         );
-        _ = labelbuilder.Append(asm.GetName().Name);
-        if (Widgets.ButtonText(toggleLabelRect, labelbuilder.ToString(), false))
+        Text.Anchor = TextAnchor.MiddleLeft;
+        var asmTimeElapsed = TimeElapsedExplorer.GetAssemblyTimeElapsed(asm);
+        Widgets.Label(actionsRect, asmTimeElapsed < 0 ? "--" : $"{asmTimeElapsed:0} ms");
+        Text.Anchor = TextAnchor.UpperLeft;
+
+        // overview stat cards: Tests / Passed / Failed / Skipped / Not run
+        var statsRow = listing.GetRect(HEIGHT_ASSEMBLY_STATS);
+        var tally = AssemblyExplorer.TallyTestStatuses(asm);
+        var total = tally.Values.Sum();
+        DrawStatCard(ref statsRow, "Tests", total, Color.white);
+        DrawStatCard(ref statsRow, "Passed", tally[TestStatus.PASS], StatusStyle.ColorPass);
+        DrawStatCard(ref statsRow, "Failed", tally[TestStatus.ERROR], StatusStyle.ColorFail);
+        DrawStatCard(ref statsRow, "Skipped", tally[TestStatus.SKIP], StatusStyle.ColorWarn);
+        DrawStatCard(ref statsRow, "Not run", tally[TestStatus.UNKNOWN], StatusStyle.ColorUnknown);
+
+        listing.GapLine(4f);
+
+        // "Test Suites" sub-header: this row (and only this row) owns the collapse/expand
+        // toggle for the suite list directly beneath it, so it's clear the stat cards above
+        // always stay visible regardless of the toggle state.
+        var suitesCount = FilteredExplorer.GetFilteredTestSuites(asm).Count();
+        var isExpanded = GetAssemblyVisibility(asm);
+        var suitesHeaderRow = listing.GetRect(HEIGHT_CONTROLS);
+        var suitesHeaderFullRect = suitesHeaderRow;
+        if (Mouse.IsOver(suitesHeaderFullRect))
+        {
+            Widgets.DrawHighlight(suitesHeaderFullRect);
+        }
+        _ = RectCursor.TakeLeft(ref suitesHeaderRow, SIZE_CONTROLS_ICON_BTN, out var chevronRect);
+        GUI.DrawTexture(chevronRect, isExpanded ? Icons.ChevronExpanded : Icons.ChevronCollapsed);
+        RectCursor.TakeLeft(ref suitesHeaderRow, WIDTH_CONTROLS_CONTROL_GAP);
+        Text.Anchor = TextAnchor.MiddleLeft;
+        Widgets.Label(suitesHeaderRow, $"Test Suites ({suitesCount})");
+        Text.Anchor = TextAnchor.UpperLeft;
+        if (Widgets.ButtonInvisible(suitesHeaderFullRect))
         {
             ToggleAssemblyVisibility(asm);
         }
 
-        // results
-        var text =
-            AssemblyExplorer.GetAssemblyError(asm) != null
-                ? AssemblyExplorer.GetAssemblyError(asm)?.ToString() ?? ""
-                : "";
-        DrawErrorZone(messageRect, detailsRect, text);
-
-        // next lines: test suites
-        if (GetAssemblyVisibility(asm))
+        if (isExpanded)
         {
             foreach (var ts in FilteredExplorer.GetFilteredTestSuites(asm))
             {
-                DrawTestSuiteLine(listing, ts);
+                DrawTestSuiteRow(listing, ts);
             }
         }
+
+        listing.Gap(GAP_ASSEMBLY_BLOCK);
     }
 
-    private bool GetTestSuiteVisibility(Type ts)
+    private static void DrawStatCard(ref Rect row, string label, int count, Color valueColor)
     {
-        if (!testSuiteVisibility.TryGetValue(ts, out var value))
-        {
-            value = true;
-            testSuiteVisibility[ts] = value;
-        }
+        _ = RectCursor.TakeLeft(ref row, WIDTH_ASSEMBLY_STAT, out var rect);
+        var numberRect = rect.TopPartPixels(rect.height * 0.6f);
+        var labelRect = rect.BottomPartPixels(rect.height * 0.4f);
 
-        return value;
-    }
-
-    private void ToggleTestSuiteVisibility(Type ts) =>
-        testSuiteVisibility[ts] = !GetTestSuiteVisibility(ts);
-
-    private void DrawTestSuiteLine(Listing_Standard listing, Type ts)
-    {
-        var row = listing.GetRect(HEIGHT_ROW);
-        var runBtnRect = row.LeftPartPixels(WIDTH_ROW_RUN);
-        var timeRect = row.RightPartPixels(row.width - runBtnRect.xMax)
-            .LeftPartPixels(WIDTH_TIME_LABEL);
-        var errorRect = row.RightPartPixels(row.width - (timeRect.xMax + (WIDTH_LEVEL_INDENT * 1)))
-            .LeftPartPixels(WIDTH_ERROR_LEVEL);
-        var toggleLabelRect = row.RightPartPixels(row.width - errorRect.xMax)
-            .LeftPartPixels(WIDTH_TOGGLE_LABEL);
-        var messageRect = row.RightPartPixels(row.width - toggleLabelRect.xMax);
-        messageRect = messageRect.LeftPartPixels(messageRect.width - WIDTH_DETAILS_BTN);
-        var detailsRect = row.RightPartPixels(WIDTH_DETAILS_BTN);
+        Text.Font = GameFont.Medium;
+        Text.Anchor = TextAnchor.MiddleLeft;
+        var prevColor = GUI.color;
+        GUI.color = valueColor;
+        Widgets.Label(numberRect, count.ToString(CultureInfo.InvariantCulture));
+        GUI.color = prevColor;
 
         Text.Font = GameFont.Tiny;
-        Text.Anchor = TextAnchor.MiddleCenter;
-        // test run button
-        if (Widgets.ButtonText(runBtnRect, "run"))
+        Widgets.Label(labelRect, label);
+
+        Text.Font = GameFont.Small;
+        Text.Anchor = TextAnchor.UpperLeft;
+    }
+
+    private static void DrawTestSuiteRow(Listing_Standard listing, Type ts)
+    {
+        var row = listing.GetRect(HEIGHT_SUITE_ROW);
+        if (Mouse.IsOver(row))
+        {
+            Widgets.DrawHighlight(row);
+        }
+
+        _ = RectCursor.TakeLeft(ref row, WIDTH_SUITE_RUN_BTN, out var runSlot);
+        var runRect = RectCursor.CenterSquare(runSlot);
+        TooltipHandler.TipRegion(runRect, "Run all tests in this test suite");
+        if (Widgets.ButtonImage(runRect, Icons.Run))
         {
             Runner.RunTestSuite(ts);
+            StatusExplorer.UpdateAllStatusCounts();
             TimeElapsedExplorer.UpdateAssemblyTimeElapsed(ts.Assembly);
         }
-        // Todo time data
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
+
+        var detailsSlot = row.RightPartPixels(WIDTH_SUITE_DETAILS_BTN);
+        var detailsRect = RectCursor.CenterVertically(detailsSlot, HEIGHT_SUITE_DETAILS_BTN);
+        row = row.LeftPartPixels(row.width - WIDTH_SUITE_DETAILS_BTN - WIDTH_CONTROLS_CONTROL_GAP);
+
+        var timeRect = row.RightPartPixels(WIDTH_SUITE_TIME);
+        row = row.LeftPartPixels(row.width - WIDTH_SUITE_TIME - WIDTH_CONTROLS_CONTROL_GAP);
+
+        var barSlot = row.RightPartPixels(WIDTH_SUITE_RESULT_BAR);
+        var barRect = RectCursor.CenterVertically(barSlot, HEIGHT_SUITE_RESULT_BAR);
+        row = row.LeftPartPixels(row.width - WIDTH_SUITE_RESULT_BAR - WIDTH_CONTROLS_CONTROL_GAP);
+
+        var nameRect = row;
+
+        Text.Anchor = TextAnchor.MiddleLeft;
+        Widgets.Label(nameRect, ts.Name);
+
+        Text.Anchor = TextAnchor.MiddleRight;
         var timeElapsed = TimeElapsedExplorer.GetTestSuiteTimeElapsed(ts);
-        Widgets.Label(timeRect, $"{(timeElapsed == -1 ? "--" : $"{timeElapsed}")} ms");
-        var color = TestSuiteExplorer.GetTestSuiteStatus(ts) switch
-        {
-            TestSuiteStatus.WARNING or TestSuiteStatus.SKIP => COLOR_WARN,
-            TestSuiteStatus.ERROR => COLOR_FAIL,
-            TestSuiteStatus.PASS => COLOR_PASS,
-            TestSuiteStatus.UNKNOWN => COLOR_UNKNOWN,
-            _ => throw new NotImplementedException(),
-        };
-        Widgets.DrawBoxSolid(errorRect, color);
+        Widgets.Label(timeRect, timeElapsed < 0 ? "--" : $"{timeElapsed:0} ms");
+        Text.Anchor = TextAnchor.UpperLeft;
 
-        // collapse / expand button
-        Text.Font = GameFont.Small;
-        Text.Anchor = TextAnchor.MiddleLeft;
-        var labelbuilder = new StringBuilder();
-        _ = labelbuilder.Append(GetTestSuiteVisibility(ts) ? "[-] " : "[+] ");
-        _ = labelbuilder.Append(
-            $"{TestSuiteStatusExtension.StatusSymbol(TestSuiteExplorer.GetTestSuiteStatus(ts))} "
-        );
-        _ = labelbuilder.Append(ts.Name);
-        if (Widgets.ButtonText(toggleLabelRect, labelbuilder.ToString(), false))
-        {
-            ToggleTestSuiteVisibility(ts);
-        }
+        DrawResultBar(barRect, TestSuiteExplorer.TallyTestStatuses(ts));
 
-        // results
-
-        var text =
-            TestSuiteExplorer.GetTestSuiteError(ts) != null
-                ? TestSuiteExplorer.GetTestSuiteError(ts)?.ToString() ?? ""
-                : "";
-        DrawErrorZone(messageRect, detailsRect, text);
-
-        // next lines: test suites
-        if (GetTestSuiteVisibility(ts))
-        {
-            foreach (var test in FilteredExplorer.GetFilteredTests(ts))
-            {
-                DrawTestLine(listing, test);
-            }
-        }
-    }
-
-    private static void DrawTestLine(Listing_Standard listing, MethodInfo test)
-    {
-        Text.Font = GameFont.Tiny;
         Text.Anchor = TextAnchor.MiddleCenter;
-
-        var row = listing.GetRect(HEIGHT_ROW);
-        var runBtnRect = row.LeftPartPixels(WIDTH_ROW_RUN);
-        var timeRect = row.RightPartPixels(row.width - runBtnRect.xMax)
-            .LeftPartPixels(WIDTH_TIME_LABEL);
-        var errorRect = row.RightPartPixels(row.width - (timeRect.xMax + (WIDTH_LEVEL_INDENT * 2)))
-            .LeftPartPixels(WIDTH_ERROR_LEVEL);
-        var toggleLabelRect = row.RightPartPixels(row.width - errorRect.xMax)
-            .LeftPartPixels(WIDTH_TOGGLE_LABEL);
-        var messageRect = row.RightPartPixels(row.width - toggleLabelRect.xMax);
-        messageRect = messageRect.LeftPartPixels(messageRect.width - WIDTH_DETAILS_BTN);
-        var detailsRect = row.RightPartPixels(WIDTH_DETAILS_BTN);
-
-        // test run button
-        if (Widgets.ButtonText(runBtnRect, "run"))
+        if (Widgets.ButtonText(detailsRect, "Details"))
         {
-            Runner.RunTest(test);
-            TimeElapsedExplorer.UpdateAssemblyTimeElapsed(test.DeclaringType.Assembly);
+            Find.WindowStack.Add(new Window_TestSuiteDetails(ts));
         }
-        // Todo time data
-        var timeElapsed = TimeElapsedExplorer.GetTestTimeElapsed(test);
-        Widgets.Label(timeRect, $"{(timeElapsed == -1 ? "--" : $"{timeElapsed}")} ms");
-        var color = TestExplorer.GetTestStatus(test) switch
-        {
-            TestStatus.SKIP => COLOR_WARN,
-            TestStatus.ERROR => COLOR_FAIL,
-            TestStatus.PASS => COLOR_PASS,
-            TestStatus.UNKNOWN => COLOR_UNKNOWN,
-            _ => throw new NotImplementedException(),
-        };
-        Widgets.DrawBoxSolid(errorRect, color);
-
-        // collapse / expand button
-        Text.Anchor = TextAnchor.MiddleLeft;
-        var labelbuilder = new StringBuilder();
-        _ = labelbuilder.Append(
-            $"{TestStatusExtension.StatusSymbol(TestExplorer.GetTestStatus(test))} "
-        );
-        _ = labelbuilder.Append(test.Name);
-        Widgets.Label(toggleLabelRect, labelbuilder.ToString());
-
-        // results
-        var text =
-            TestExplorer.GetTestError(test) != null
-                ? TestExplorer.GetTestError(test)?.ToString() ?? ""
-                : "";
-        DrawErrorZone(messageRect, detailsRect, text);
+        Text.Anchor = TextAnchor.UpperLeft;
     }
 
-    private static void DrawErrorZone(Rect messageRect, Rect detailsRect, string text)
+    /// <summary>
+    /// Draws a stacked bar showing the proportion of a test suite's tests at each status
+    /// (passed/failed/skipped/not run), similar to a CI test-report result bar.
+    /// </summary>
+    private static void DrawResultBar(Rect rect, Util.Tally<TestStatus> tally)
     {
-        Text.Font = GameFont.Tiny;
-        Text.Anchor = TextAnchor.MiddleLeft;
-        if (text.Length > 0)
+        Widgets.DrawBoxSolid(rect, new Color(1f, 1f, 1f, 0.08f));
+
+        var total = tally.Values.Sum();
+        if (total <= 0)
         {
-            if (text.Length > ERROR_CHAR_LIMIT)
-            {
-                if (Widgets.ButtonText(detailsRect, "To debug log"))
-                {
-                    // TODO
-                    RimTestReduxMod.Instance.LogError(text);
-                }
-                text = text[..(ERROR_CHAR_LIMIT - 5)] + "[...]";
-            }
-            _ = Widgets.TextArea(
-                messageRect,
-                text.Replace("\n", " ", StringComparison.Ordinal),
-                true
-            );
+            return;
         }
+
+        var x = rect.x;
+        void Segment(TestStatus status)
+        {
+            var count = tally[status];
+            if (count <= 0)
+            {
+                return;
+            }
+            var width = rect.width * count / total;
+            Widgets.DrawBoxSolid(
+                new Rect(x, rect.y, width, rect.height),
+                StatusStyle.GetColor(status)
+            );
+            x += width;
+        }
+
+        Segment(TestStatus.PASS);
+        Segment(TestStatus.ERROR);
+        Segment(TestStatus.SKIP);
+        Segment(TestStatus.UNKNOWN);
     }
 }
