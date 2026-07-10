@@ -1,77 +1,63 @@
-﻿using System;
-using static RimTestRedux.Assertion;
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace RimTestRedux.tests
+namespace RimTestRedux.Tests;
+
+[TestSuite]
+public static class BetweenInclusive
 {
-    [TestSuite]
-    public static class BetweenInclusive
+    [Test]
+    public static void PassWhenBetweenInclusive() =>
+        Assertion.Assert(1).To.Be.BetweenInclusive(0, 2);
+
+    [Test]
+    public static void PassWhenEqualsMin() => Assertion.Assert(0).To.Be.BetweenInclusive(0, 2);
+
+    [Test]
+    public static void PassWhenEqualsMax() => Assertion.Assert(2).To.Be.BetweenInclusive(0, 2);
+
+    [Test]
+    public static void PassWhenEqualsBoth() => Assertion.Assert(1).To.Be.BetweenInclusive(1, 1);
+
+    [Test]
+    public static void ThrowWhenUnder()
     {
-        [Test]
-        public static void PassWhenBetweenInclusive()
+        try
         {
-            Assert(1).To.Be.BetweenInclusive(0, 2);
+            Assertion.Assert(-1).To.Be.BetweenInclusive(0, 2);
         }
+        catch (Exception)
+        {
+            return;
+        }
+        throw new ShouldHaveThrownException("Should have thrown an exception.");
+    }
 
-        [Test]
-        public static void PassWhenEqualsMin()
+    [Test]
+    public static void ThrowWhenOver()
+    {
+        try
         {
-            Assert(0).To.Be.BetweenInclusive(0, 2);
+            Assertion.Assert(3).To.Be.BetweenInclusive(0, 2);
         }
+        catch (Exception)
+        {
+            return;
+        }
+        throw new ShouldHaveThrownException("Should have thrown an exception.");
+    }
 
-        [Test]
-        public static void PassWhenEqualsMax()
+    [Test]
+    public static void ThrowWhenInvalidLimits()
+    {
+        try
         {
-            Assert(2).To.Be.BetweenInclusive(0, 2);
+            Assertion.Assert(1).To.Be.BetweenInclusive(2, 0);
         }
-
-        [Test]
-        public static void PassWhenEqualsBoth()
+        catch (Exception)
         {
-            Assert(1).To.Be.BetweenInclusive(1, 1);
+            return;
         }
-
-        [Test]
-        public static void ThrowWhenUnder()
-        {
-            try
-            {
-                Assert(-1).To.Be.BetweenInclusive(0, 2);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            throw new Exception("Should have thrown an exception.");
-        }
-
-        [Test]
-        public static void ThrowWhenOver()
-        {
-            try
-            {
-                Assert(3).To.Be.BetweenInclusive(0, 2);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            throw new Exception("Should have thrown an exception.");
-        }
-
-        [Test]
-        public static void ThrowWhenInvalidLimits()
-        {
-            try
-            {
-                Assert(1).To.Be.BetweenInclusive(2, 0);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            throw new Exception("Should have thrown an exception.");
-        }
+        throw new ShouldHaveThrownException("Should have thrown an exception.");
     }
 }
 

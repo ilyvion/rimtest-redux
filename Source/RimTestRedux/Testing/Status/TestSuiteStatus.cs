@@ -1,63 +1,54 @@
-﻿namespace RimTestRedux.Testing
+﻿namespace RimTestRedux.Testing;
+
+/// <summary>
+/// Registered Test Suite current test execution status.
+/// </summary>
+public enum TestSuiteStatus
 {
     /// <summary>
-    /// Registered Test Suite current test execution status.
+    /// Invalid Test Suite
     /// </summary>
-    public enum TestSuiteStatus
-    {
-        /// <summary>
-        /// Invalid Test Suite
-        /// </summary>
-        SKIP,
-
-        /// <summary>
-        /// Any test fails
-        /// </summary>
-        ERROR,
-
-        /// <summary>
-        /// Any test skipped
-        /// </summary>
-        WARNING,
-
-        /// <summary>
-        /// Any test is not run
-        /// </summary>
-        UNKNOWN,
-
-        /// <summary>
-        /// All tests are successful
-        /// </summary>
-        PASS,
-    }
+    SKIP,
 
     /// <summary>
-    /// Utils for TestStatus
+    /// Any test fails
     /// </summary>
-    public static class TestSuiteStatusExtension
-    {
-        /// <summary>
-        /// Value to string symbol converter
-        /// </summary>
-        /// <param name="status"></param>
-        /// <returns>user friendly string representation</returns>
-        public static string StatusSymbol(TestSuiteStatus status)
+    ERROR,
+
+    /// <summary>
+    /// Any test skipped
+    /// </summary>
+    WARNING,
+
+    /// <summary>
+    /// Any test is not run
+    /// </summary>
+    UNKNOWN,
+
+    /// <summary>
+    /// All tests are successful
+    /// </summary>
+    PASS,
+}
+
+/// <summary>
+/// Utils for TestStatus
+/// </summary>
+public static class TestSuiteStatusExtension
+{
+    /// <summary>
+    /// Value to string symbol converter
+    /// </summary>
+    /// <param name="status"></param>
+    /// <returns>user friendly string representation</returns>
+    public static string StatusSymbol(TestSuiteStatus status) =>
+        status switch
         {
-            switch (status)
-            {
-                case TestSuiteStatus.UNKNOWN:
-                    return "??";
-                case TestSuiteStatus.SKIP:
-                    return "➥";
-                case TestSuiteStatus.PASS:
-                    return "✓";
-                case TestSuiteStatus.WARNING:
-                    return "!!";
-                case TestSuiteStatus.ERROR:
-                    return "✘";
-                default:
-                    return "";
-            }
-        }
-    }
+            TestSuiteStatus.UNKNOWN => "??",
+            TestSuiteStatus.SKIP => "➥",
+            TestSuiteStatus.PASS => "✓",
+            TestSuiteStatus.WARNING => "!!",
+            TestSuiteStatus.ERROR => "✘",
+            _ => "",
+        };
 }

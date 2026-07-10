@@ -1,51 +1,63 @@
 ﻿using RimTestRedux.Core;
 using RimTestRedux.Testing;
-using UnityEngine;
-using Verse;
 
-namespace RimTestRedux
+namespace RimTestRedux;
+
+/// <summary>
+/// This is the mod entry point run when every assemblies of loaded mods are now loaded and available.
+/// </summary>
+/// <remarks>We can run test discovery at this point.</remarks>
+public class RimTestReduxMod : Mod
 {
+#pragma warning disable CS8618 // Set by constructor
     /// <summary>
-    /// This is the mod entry point run when every assemblies of loaded mods are now loaded and available.
+    /// Gets the singleton instance of the <see cref="RimTestReduxMod"/> class.
     /// </summary>
-    /// <remarks>We can run test discovery at this point.</remarks>
-    public class RimTestReduxMod : Mod
+    public static RimTestReduxMod Instance { get; private set; }
+
+#pragma warning restore CS8618
+
+    /// <summary>
+    /// Gets the package ID of the RimTest Redux mod.
+    /// </summary>
+    public static string PackageId => Instance!.Content.PackageId;
+
+    // /// <inheritdoc/>
+    //protected override bool HasSettings => true;
+
+    /// <summary>
+    /// Gets the settings for the RimTest Redux mod.
+    /// </summary>
+    public static Settings Settings => Instance.GetSettings<Settings>();
+
+    /// <summary>
+    /// Said entry point
+    /// </summary>
+    public RimTestReduxMod(ModContentPack content)
+        : base(content) //our constructor
     {
-        /// <summary>
-        /// Said entry point
-        /// </summary>
-        public RimTestReduxMod(ModContentPack content)
-            : base(content) //our constructor
+        Explorer.ExploreAndRegisterAssemblies();
+        StatusExplorer.UpdateAllStatusCounts();
+
+        if (Settings.RunAtStartup)
         {
-            Settings = GetSettings<RimTestReduxSettings>();
-            Explorer.ExploreAndRegisterAssemblies();
+            Runner.RunAllRegisteredTests();
             StatusExplorer.UpdateAllStatusCounts();
-
-            if (Settings.RunAtStartup)
-            {
-                Runner.RunAllRegisteredTests();
-                StatusExplorer.UpdateAllStatusCounts();
-                Viewer.LogTestsResults();
-            }
+            Viewer.LogTestsResults();
         }
-
-        ///<summary>
-        /// Settings getter
-        ///</summary>
-        public static RimTestReduxSettings Settings { get; private set; }
-
-        ///<summary>
-        /// Settings UI drawing logic
-        ///</summary>
-        public override void DoSettingsWindowContents(Rect canvas)
-        {
-            base.DoSettingsWindowContents(canvas);
-            Settings.DoWindowContents(canvas);
-        }
-
-        ///<summary>
-        /// Mod header in the mod config UI
-        ///</summary>
-        public override string SettingsCategory() => "RimTestRedux";
     }
+
+    ///<summary>
+    /// Settings UI drawing logic
+    ///</summary>
+    public override void DoSettingsWindowContents(Rect inRect)
+    {
+        base.DoSettingsWindowContents(inRect);
+        Settings.DoWindowContents(inRect);
+    }
+
+    ///<summary>
+    /// Mod header in the mod config UI
+    ///</summary>
+    public override string SettingsCategory() => "RimTestRedux";
 }

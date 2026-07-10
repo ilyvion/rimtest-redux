@@ -1,6 +1,5 @@
 ﻿/*
-using static RimTestRedux.Assertion;
-#pragma warning disable CS1591 // Commentaire XML manquant pour le type ou le membre visible publiquement
+
 namespace RimTestRedux.tests
 {
     [TestSuite]
@@ -30,9 +29,9 @@ namespace RimTestRedux.tests
     public static class ExampleErroringTestSuite
     {
         [Test]
-        public static void ErroringTest() { Assert(true).To.Be.False(); }
+        public static void ErroringTest() { Assertion.Assert(true).To.Be.False(); }
         [Test]
-        public static void ValidTest() { Assert(false).To.Be.False(); }
+        public static void ValidTest() { Assertion.Assert(false).To.Be.False(); }
     }
 
     [TestSuite]
@@ -41,10 +40,10 @@ namespace RimTestRedux.tests
         [Test]
         public static bool SkippedTest() { return true; }
         [Test]
-        public static void ValidTest() { Assert(false).To.Be.False(); }
+        public static void ValidTest() { Assertion.Assert(false).To.Be.False(); }
     }
 
 }
-#pragma warning restore CS1591 // Commentaire XML manquant pour le type ou le membre visible publiquement
+
 
 */

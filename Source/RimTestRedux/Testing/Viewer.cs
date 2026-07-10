@@ -1,185 +1,184 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 using RimTestRedux.Util;
-using Verse;
-using static RimTestRedux.Testing.Assembly2TestSuiteLink;
-using static RimTestRedux.Testing.AssemblyExplorer;
-using static RimTestRedux.Testing.AssemblyStatusExtension;
-using static RimTestRedux.Testing.TestExplorer;
-using static RimTestRedux.Testing.TestStatusExtension;
-using static RimTestRedux.Testing.TestSuite2TestLink;
-using static RimTestRedux.Testing.TestSuiteExplorer;
-using static RimTestRedux.Testing.TestSuiteStatusExtension;
 
-namespace RimTestRedux.Testing
+namespace RimTestRedux.Testing;
+
+internal static class Viewer
 {
-    static class Viewer
+    private static void LogDetailledErrors(ICollection<Assembly> asms)
     {
-        static Action<string> Info = (string msg) => Log.Message(msg);
-        static Action<string> Warn = (string msg) => Log.Warning(msg);
-        static Action<string> Err = (string msg) => Log.Error(msg);
-
-        static void LogDetailledErrors(ICollection<Assembly> asms)
+        foreach (var asm in asms)
         {
-            foreach (Assembly asm in asms)
+            var asmStatus = AssemblyExplorer.GetAssemblyStatus(asm);
+            var asmName = asm.GetName().Name;
+            switch (asmStatus)
             {
-                AssemblyStatus asmStatus = GetAssemblyStatus(asm);
-                string asmName = asm.GetName().Name;
-                switch (asmStatus)
+                case AssemblyStatus.WARNING:
+                    Log.Warning(
+                        $"[{AssemblyStatusExtension.StatusSymbol(asmStatus)}] {asmName} > {AssemblyExplorer.GetAssemblyError(asm)?.Message}"
+                    );
+                    break;
+                case AssemblyStatus.ERROR:
+                    Log.Error(
+                        $"[{AssemblyStatusExtension.StatusSymbol(asmStatus)}] {asmName} > {AssemblyExplorer.GetAssemblyError(asm)}"
+                    );
+                    break;
+                case AssemblyStatus.UNKNOWN:
+                    Log.Message(
+                        $"[{AssemblyStatusExtension.StatusSymbol(asmStatus)}] {asmName} > Not Run Yet"
+                    );
+                    break;
+                case AssemblyStatus.PASS:
+                default:
+                    break;
+            }
+            //Errored tests display
+            foreach (var testSuite in Assembly2TestSuiteLink.GetTestSuites(asm))
+            {
+                var tsStatus = TestSuiteExplorer.GetTestSuiteStatus(testSuite);
+                if (tsStatus is TestSuiteStatus.PASS)
                 {
-                    case AssemblyStatus.WARNING:
-                        Warn(
-                            $"[{StatusSymbol(asmStatus)}] {asmName} > {GetAssemblyError(asm).Message}"
+                    continue;
+                }
+
+                switch (tsStatus)
+                {
+                    case TestSuiteStatus.WARNING:
+                    case TestSuiteStatus.SKIP:
+                        Log.Warning(
+                            $"    [{TestSuiteStatusExtension.StatusSymbol(tsStatus)}] {testSuite.Name} > {TestSuiteExplorer.GetTestSuiteError(testSuite)}"
                         );
                         break;
-                    case AssemblyStatus.ERROR:
-                        Err($"[{StatusSymbol(asmStatus)}] {asmName} > {GetAssemblyError(asm)}");
+                    case TestSuiteStatus.ERROR:
+                        Log.Error(
+                            $"    [{TestSuiteStatusExtension.StatusSymbol(tsStatus)}] {testSuite.Name} > {TestSuiteExplorer.GetTestSuiteError(testSuite)}"
+                        );
                         break;
-                    case AssemblyStatus.UNKNOWN:
-                        Info($"[{StatusSymbol(asmStatus)}] {asmName} > Not Run Yet");
+                    case TestSuiteStatus.UNKNOWN:
+                        Log.Message(
+                            $"    [{TestSuiteStatusExtension.StatusSymbol(tsStatus)}] {testSuite.Name} > Not Run Yet"
+                        );
                         break;
+                    case TestSuiteStatus.PASS:
                     default:
                         break;
                 }
-                //Errored tests display
-                foreach (Type testSuite in GetTestSuites(asm))
+
+                foreach (var test in TestSuite2TestLink.GetTests(testSuite))
                 {
-                    TestSuiteStatus tsStatus = GetTestSuiteStatus(testSuite);
-                    if (tsStatus is TestSuiteStatus.PASS)
-                        continue;
-                    switch (tsStatus)
+                    var tStatus = TestExplorer.GetTestStatus(test);
+                    switch (tStatus)
                     {
-                        case TestSuiteStatus.WARNING:
-                        case TestSuiteStatus.SKIP:
-                            Warn(
-                                $"    [{StatusSymbol(tsStatus)}] {testSuite.Name} > {GetTestSuiteError(testSuite)}"
+                        case TestStatus.SKIP:
+                            Log.Warning(
+                                $"        [{TestStatusExtension.StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > {TestExplorer.GetTestError(test)}"
                             );
-                            break;
-                        case TestSuiteStatus.ERROR:
-                            Err(
-                                $"    [{StatusSymbol(tsStatus)}] {testSuite.Name} > {GetTestSuiteError(testSuite)}"
+                            continue;
+                        case TestStatus.ERROR:
+                            Log.Error(
+                                $"        [{TestStatusExtension.StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > {TestExplorer.GetTestError(test)}"
                             );
-                            break;
-                        case TestSuiteStatus.UNKNOWN:
-                            Info($"    [{StatusSymbol(tsStatus)}] {testSuite.Name} > Not Run Yet");
-                            break;
+                            continue;
+                        case TestStatus.UNKNOWN:
+                            Log.Message(
+                                $"        [{TestStatusExtension.StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > Not Run Yet"
+                            );
+                            continue;
+                        case TestStatus.PASS:
                         default:
                             break;
                     }
-
-                    foreach (MethodInfo test in GetTests(testSuite))
-                    {
-                        TestStatus tStatus = GetTestStatus(test);
-                        switch (tStatus)
-                        {
-                            case TestStatus.SKIP:
-                                Warn(
-                                    $"        [{StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > {GetTestError(test)}"
-                                );
-                                continue;
-                            case TestStatus.ERROR:
-                                Err(
-                                    $"        [{StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > {GetTestError(test)}"
-                                );
-                                continue;
-                            case TestStatus.UNKNOWN:
-                                Info(
-                                    $"        [{StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > Not Run Yet"
-                                );
-                                continue;
-                            default:
-                                break;
-                        }
-                    }
                 }
             }
         }
+    }
 
-        static string BuildAsmSummary(
-            Assembly asm,
-            Tally<TestSuiteStatus> tsTally,
-            Tally<TestStatus> tTally
-        )
+    private static string BuildAsmSummary(
+        Assembly asm,
+        Tally<TestSuiteStatus> tsTally,
+        Tally<TestStatus> tTally
+    )
+    {
+        var builder = new StringBuilder();
+
+        _ = builder.Append(
+            $"[{AssemblyStatusExtension.StatusSymbol(AssemblyExplorer.GetAssemblyStatus(asm))}] {asm.GetName().Name} "
+        );
+        _ = builder.Append($"|| Test Suites :");
+        foreach (TestSuiteStatus status in Enum.GetValues(typeof(TestSuiteStatus)))
         {
-            StringBuilder builder = new StringBuilder();
-
-            builder.Append($"[{StatusSymbol(GetAssemblyStatus(asm))}] {asm.GetName().Name} ");
-            builder.Append($"|| Test Suites :");
-            foreach (TestSuiteStatus status in Enum.GetValues(typeof(TestSuiteStatus)))
+            var tally = tsTally[status];
+            if (tally != 0)
             {
-                int tally = tsTally[status];
-                if (tally != 0)
-                {
-                    builder.Append($" {tally} {StatusSymbol(status)} ");
-                }
+                _ = builder.Append($" {tally} {TestSuiteStatusExtension.StatusSymbol(status)} ");
             }
-
-            builder.Append($"|| Tests :");
-            foreach (TestStatus status in Enum.GetValues(typeof(TestStatus)))
-            {
-                int tally = tTally[status];
-                if (tally != 0)
-                {
-                    builder.Append($" {tally} {StatusSymbol(status)} ");
-                }
-            }
-
-            return builder.ToString();
         }
 
-        static void LogSummary(ICollection<Assembly> asms)
+        _ = builder.Append($"|| Tests :");
+        foreach (TestStatus status in Enum.GetValues(typeof(TestStatus)))
         {
-            foreach (Assembly asm in asms)
+            var tally = tTally[status];
+            if (tally != 0)
             {
-                Tally<TestSuiteStatus> tsTally = new Tally<TestSuiteStatus>();
-                Tally<TestStatus> tTally = new Tally<TestStatus>();
-
-                // test results tallying
-                foreach (Type testSuite in GetTestSuites(asm))
-                {
-                    tsTally[GetTestSuiteStatus(testSuite)]++;
-
-                    foreach (MethodInfo test in GetTests(testSuite))
-                    {
-                        tTally[GetTestStatus(test)]++;
-                    }
-                }
-
-                string asmResult = BuildAsmSummary(asm, tsTally, tTally);
-
-                switch (GetAssemblyStatus(asm))
-                {
-                    case AssemblyStatus.UNKNOWN:
-                    case AssemblyStatus.PASS:
-                        Info(asmResult);
-                        continue;
-                    case AssemblyStatus.WARNING:
-                        Warn(asmResult);
-                        break;
-                    case AssemblyStatus.ERROR:
-                        Err(asmResult);
-                        break;
-                    default:
-                        break;
-                }
+                _ = builder.Append($" {tally} {TestStatusExtension.StatusSymbol(status)} ");
             }
         }
 
-        public static void LogTestsResults()
-        {
-            List<Assembly> asms = GetAssemblies();
-            asms.SortBy(asm => asm.FullName);
-            if (!RimTestReduxMod.Settings.RunOwnTests)
-                asms.Remove(Assembly.GetExecutingAssembly());
+        return builder.ToString();
+    }
 
-            Info("==TESTING START");
-            Info("__SUMMARY");
-            LogSummary(asms);
-            Info("__ERRORS");
-            LogDetailledErrors(asms);
-            Info("==TESTING END");
+    private static void LogSummary(ICollection<Assembly> asms)
+    {
+        foreach (var asm in asms)
+        {
+            Tally<TestSuiteStatus> tsTally = [];
+            Tally<TestStatus> tTally = [];
+
+            // test results tallying
+            foreach (var testSuite in Assembly2TestSuiteLink.GetTestSuites(asm))
+            {
+                tsTally[TestSuiteExplorer.GetTestSuiteStatus(testSuite)]++;
+
+                foreach (var test in TestSuite2TestLink.GetTests(testSuite))
+                {
+                    tTally[TestExplorer.GetTestStatus(test)]++;
+                }
+            }
+
+            var asmResult = BuildAsmSummary(asm, tsTally, tTally);
+
+            switch (AssemblyExplorer.GetAssemblyStatus(asm))
+            {
+                case AssemblyStatus.UNKNOWN:
+                case AssemblyStatus.PASS:
+                    Log.Message(asmResult);
+                    continue;
+                case AssemblyStatus.WARNING:
+                    Log.Warning(asmResult);
+                    break;
+                case AssemblyStatus.ERROR:
+                    Log.Error(asmResult);
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+
+    public static void LogTestsResults()
+    {
+        var asms = Assembly2TestSuiteLink.Assemblies;
+        asms.SortBy(asm => asm.FullName);
+        if (!RimTestReduxMod.Settings.RunOwnTests)
+        {
+            _ = asms.Remove(Assembly.GetExecutingAssembly());
+        }
+
+        Log.Message("==TESTING START");
+        Log.Message("__SUMMARY");
+        LogSummary(asms);
+        Log.Message("__ERRORS");
+        LogDetailledErrors(asms);
+        Log.Message("==TESTING END");
     }
 }

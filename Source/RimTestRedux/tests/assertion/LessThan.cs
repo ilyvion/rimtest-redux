@@ -1,32 +1,24 @@
-﻿using System;
-using static RimTestRedux.Assertion;
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace RimTestRedux.tests.assertion
+namespace RimTestRedux.Tests.Assertions;
+
+[TestSuite]
+public static class LessThan
 {
-    [TestSuite]
-    public static class LessThan
-    {
-        [Test]
-        public static void PassWhenLess()
-        {
-            Assert(1).To.Be.LessThan(2);
-        }
+    [Test]
+    public static void PassWhenLess() => Assertion.Assert(1).To.Be.LessThan(2);
 
-        [Test]
-        public static void ThrowWhenNotLess()
+    [Test]
+    public static void ThrowWhenNotLess()
+    {
+        try
         {
-            try
-            {
-                Assert(1).To.Be.LessThan(1);
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            throw new Exception("Should have thrown an exception.");
+            Assertion.Assert(1).To.Be.LessThan(1);
         }
+        catch (Exception)
+        {
+            return;
+        }
+        throw new ShouldHaveThrownException("Should have thrown an exception.");
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member

@@ -1,32 +1,27 @@
-﻿using System;
-using static RimTestRedux.Assertion;
-#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-namespace RimTestRedux.tests.assertion
+namespace RimTestRedux.Tests.Assertions;
+
+[TestSuite]
+#pragma warning disable CA1716 // Identifiers should not match keywords
+public static class Throw
+#pragma warning restore CA1716
 {
-    [TestSuite]
-    public static class Throw
-    {
-        [Test]
-        public static void PassWhenThrow()
-        {
-            AssertFunc(() => throw new Exception()).To.Throw();
-        }
+    [Test]
+    public static void PassWhenThrow() =>
+        Assertion.AssertFunc(() => throw new ShouldHaveThrownException()).To.Throw();
 
-        [Test]
-        public static void ThrowWhenNotThrow()
+    [Test]
+    public static void ThrowWhenNotThrow()
+    {
+        try
         {
-            try
-            {
-                AssertFunc(() => 1).To.Throw();
-            }
-            catch (Exception)
-            {
-                return;
-            }
-            throw new Exception("Should have thrown an exception.");
+            Assertion.AssertFunc(() => 1).To.Throw();
         }
+        catch (Exception)
+        {
+            return;
+        }
+        throw new ShouldHaveThrownException("Should have thrown an exception.");
     }
 }
-
-#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
