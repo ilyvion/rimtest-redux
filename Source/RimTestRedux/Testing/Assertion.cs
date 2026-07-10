@@ -88,10 +88,7 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
     /// </summary>
     /// <remarks>Used by every check other than Null(), which are meaningless for a null value.</remarks>
     private IComparable RequireNonNull() =>
-        thing
-        ?? throw new AssertionException(
-            "Expected a non-null value, but the asserted value was null."
-        );
+        thing ?? throw new AssertionException("RimTestRedux.Assertion.NonNullRequired".Translate());
 
     /// <summary>
     /// Negation grammar link, negates the current assertion.
@@ -145,7 +142,9 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         if (!result)
         {
             throw new AssertionException(
-                $"Expected {thing}{(Negated ? " not" : "")} to be equal to {otherThing}."
+                (
+                    Negated ? "RimTestRedux.Assertion.NotEqualTo" : "RimTestRedux.Assertion.EqualTo"
+                ).Translate(thing!.ToString(), otherThing?.ToString())
             );
         }
     }
@@ -165,7 +164,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         if (!result)
         {
             throw new AssertionException(
-                $"Expected {thing}{(Negated ? " not" : "")} to be less than {otherThing}."
+                (
+                    Negated
+                        ? "RimTestRedux.Assertion.NotLessThan"
+                        : "RimTestRedux.Assertion.LessThan"
+                ).Translate(thing!.ToString(), otherThing?.ToString())
             );
         }
     }
@@ -185,7 +188,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         if (!result)
         {
             throw new AssertionException(
-                $"Expected {thing}{(Negated ? " not" : "")} to be greater than {otherThing}."
+                (
+                    Negated
+                        ? "RimTestRedux.Assertion.NotGreaterThan"
+                        : "RimTestRedux.Assertion.GreaterThan"
+                ).Translate(thing!.ToString(), otherThing?.ToString())
             );
         }
     }
@@ -207,7 +214,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         if (!result)
         {
             throw new AssertionException(
-                $"Expected {thing}{(Negated ? " not" : "")} to be between (inclusive) {minThing} and {maxThing}."
+                (
+                    Negated
+                        ? "RimTestRedux.Assertion.NotBetweenInclusive"
+                        : "RimTestRedux.Assertion.BetweenInclusive"
+                ).Translate(thing!.ToString(), minThing?.ToString(), maxThing?.ToString())
             );
         }
     }
@@ -229,7 +240,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         if (!result)
         {
             throw new AssertionException(
-                $"Expected {thing}{(Negated ? " not" : "")} to be between (exclusive) {minThing} and {maxThing}."
+                (
+                    Negated
+                        ? "RimTestRedux.Assertion.NotBetweenExclusive"
+                        : "RimTestRedux.Assertion.BetweenExclusive"
+                ).Translate(thing!.ToString(), minThing?.ToString(), maxThing?.ToString())
             );
         }
     }
@@ -249,7 +264,9 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         if (!result)
         {
             throw new AssertionException(
-                $"Expected {thing}{(Negated ? " not" : "")} to be the same as {otherThing}."
+                (
+                    Negated ? "RimTestRedux.Assertion.NotTheSame" : "RimTestRedux.Assertion.TheSame"
+                ).Translate(thing!.ToString(), otherThing?.ToString())
             );
         }
     }
@@ -267,7 +284,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
 
         if (!result)
         {
-            throw new AssertionException($"Expected {thing}{(Negated ? " not" : "")} to be null.");
+            throw new AssertionException(
+                (
+                    Negated ? "RimTestRedux.Assertion.NotNull" : "RimTestRedux.Assertion.Null"
+                ).Translate(thing?.ToString() ?? "null")
+            );
         }
     }
 
@@ -284,7 +305,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
 
         if (!result)
         {
-            throw new AssertionException($"Expected {thing}{(Negated ? " not" : "")} to be true.");
+            throw new AssertionException(
+                (
+                    Negated ? "RimTestRedux.Assertion.NotTrue" : "RimTestRedux.Assertion.True"
+                ).Translate(thing!.ToString())
+            );
         }
     }
 
@@ -301,7 +326,11 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
 
         if (!result)
         {
-            throw new AssertionException($"Expected {thing}{(Negated ? " not" : "")} to be false.");
+            throw new AssertionException(
+                (
+                    Negated ? "RimTestRedux.Assertion.NotFalse" : "RimTestRedux.Assertion.False"
+                ).Translate(thing!.ToString())
+            );
         }
     }
 }
@@ -383,7 +412,7 @@ public class AssertFunc : Assertion
         {
             if (Negated)
             {
-                throw new AssertionException($"Expected the function not to throw.", temp);
+                throw new AssertionException("RimTestRedux.Assertion.ThrowNot".Translate(), temp);
             }
             else
             {
@@ -395,7 +424,7 @@ public class AssertFunc : Assertion
             return;
         }
 
-        throw new AssertionException($"Expected the function to throw.");
+        throw new AssertionException("RimTestRedux.Assertion.ThrowExpected".Translate());
     }
 }
 
@@ -461,7 +490,7 @@ public class AssertAction(Action thing) : AssertFunc()
         {
             if (Negated)
             {
-                throw new AssertionException($"Expected the function not to throw.", temp);
+                throw new AssertionException("RimTestRedux.Assertion.ThrowNot".Translate(), temp);
             }
             else
             {
@@ -473,6 +502,6 @@ public class AssertAction(Action thing) : AssertFunc()
             return;
         }
 
-        throw new AssertionException($"Expected the function to throw.");
+        throw new AssertionException("RimTestRedux.Assertion.ThrowExpected".Translate());
     }
 }

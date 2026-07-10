@@ -57,12 +57,27 @@ internal sealed class Window_TestSuiteDetails : Window
 
         var tally = TestSuiteExplorer.TallyTestStatuses(testSuite);
         var statsRow = listing.GetRect(HEIGHT_SUMMARY_STAT);
-        DrawSummaryStat(ref statsRow, "Passed", tally[TestStatus.PASS], StatusStyle.ColorPass);
-        DrawSummaryStat(ref statsRow, "Failed", tally[TestStatus.ERROR], StatusStyle.ColorFail);
-        DrawSummaryStat(ref statsRow, "Skipped", tally[TestStatus.SKIP], StatusStyle.ColorWarn);
         DrawSummaryStat(
             ref statsRow,
-            "Not run",
+            "RimTestRedux.StatPassed".Translate(),
+            tally[TestStatus.PASS],
+            StatusStyle.ColorPass
+        );
+        DrawSummaryStat(
+            ref statsRow,
+            "RimTestRedux.StatFailed".Translate(),
+            tally[TestStatus.ERROR],
+            StatusStyle.ColorFail
+        );
+        DrawSummaryStat(
+            ref statsRow,
+            "RimTestRedux.StatSkipped".Translate(),
+            tally[TestStatus.SKIP],
+            StatusStyle.ColorWarn
+        );
+        DrawSummaryStat(
+            ref statsRow,
+            "RimTestRedux.StatNotRun".Translate(),
             tally[TestStatus.UNKNOWN],
             StatusStyle.ColorUnknown
         );
@@ -141,7 +156,7 @@ internal sealed class Window_TestSuiteDetails : Window
 
         _ = RectCursor.TakeLeft(ref row, WIDTH_TEST_RUN_BTN, out var runSlot);
         var runRect = RectCursor.CenterSquare(runSlot);
-        TooltipHandler.TipRegion(runRect, "Run this test");
+        TooltipHandler.TipRegion(runRect, "RimTestRedux.RunTestTooltip".Translate());
         if (Widgets.ButtonImage(runRect, Icons.Run))
         {
             Runner.RunTest(test);

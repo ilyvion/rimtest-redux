@@ -43,8 +43,10 @@ public static class Runner
                     test,
                     new ShouldHaveThrownException(
                         expectedException.ExpectedType != null
-                            ? $"Expected an exception of type {expectedException.ExpectedType.Name} to be thrown, but none was."
-                            : "Should have thrown an exception."
+                            ? "RimTestRedux.Runner.ExpectedExceptionType".Translate(
+                                expectedException.ExpectedType.Name
+                            )
+                            : "RimTestRedux.Runner.ShouldHaveThrown".Translate()
                     )
                 );
                 return;
@@ -112,7 +114,9 @@ public static class Runner
             TestSuiteExplorer.SetTestSuiteStatus(testSuite, TestSuiteStatus.ERROR);
             TestSuiteExplorer.SetTestSuiteError(
                 testSuite,
-                new TestRunAggregateException($"{tally[TestStatus.ERROR]} test failed")
+                new TestRunAggregateException(
+                    "RimTestRedux.Runner.TestsFailed".Translate(tally[TestStatus.ERROR])
+                )
             );
         }
         else if (tally[TestStatus.SKIP] != 0)
@@ -120,7 +124,9 @@ public static class Runner
             TestSuiteExplorer.SetTestSuiteStatus(testSuite, TestSuiteStatus.WARNING);
             TestSuiteExplorer.SetTestSuiteError(
                 testSuite,
-                new TestRunAggregateException($"{tally[TestStatus.SKIP]} test skipped")
+                new TestRunAggregateException(
+                    "RimTestRedux.Runner.TestsSkipped".Translate(tally[TestStatus.SKIP])
+                )
             );
         }
         else if (tally[TestStatus.UNKNOWN] != 0)
@@ -128,7 +134,9 @@ public static class Runner
             TestSuiteExplorer.SetTestSuiteStatus(testSuite, TestSuiteStatus.UNKNOWN);
             TestSuiteExplorer.SetTestSuiteError(
                 testSuite,
-                new TestRunAggregateException($"{tally[TestStatus.UNKNOWN]} test not run yet")
+                new TestRunAggregateException(
+                    "RimTestRedux.Runner.TestsNotRun".Translate(tally[TestStatus.UNKNOWN])
+                )
             );
         }
         else
@@ -159,7 +167,9 @@ public static class Runner
             AssemblyExplorer.SetAssemblyStatus(asm, AssemblyStatus.ERROR);
             AssemblyExplorer.SetAssemblyError(
                 asm,
-                new TestRunAggregateException($"{tally[TestSuiteStatus.ERROR]} test suite failed")
+                new TestRunAggregateException(
+                    "RimTestRedux.Runner.TestSuitesFailed".Translate(tally[TestSuiteStatus.ERROR])
+                )
             );
         }
         else if (tally[TestSuiteStatus.SKIP] != 0)
@@ -167,7 +177,9 @@ public static class Runner
             AssemblyExplorer.SetAssemblyStatus(asm, AssemblyStatus.WARNING);
             AssemblyExplorer.SetAssemblyError(
                 asm,
-                new TestRunAggregateException($"{tally[TestSuiteStatus.SKIP]} test suite skipped")
+                new TestRunAggregateException(
+                    "RimTestRedux.Runner.TestSuitesSkipped".Translate(tally[TestSuiteStatus.SKIP])
+                )
             );
         }
         else if (tally[TestSuiteStatus.WARNING] != 0)
@@ -176,7 +188,9 @@ public static class Runner
             AssemblyExplorer.SetAssemblyError(
                 asm,
                 new TestRunAggregateException(
-                    $"{tally[TestSuiteStatus.WARNING]} test suite have warnings"
+                    "RimTestRedux.Runner.TestSuitesWarning".Translate(
+                        tally[TestSuiteStatus.WARNING]
+                    )
                 )
             );
         }
@@ -186,7 +200,7 @@ public static class Runner
             AssemblyExplorer.SetAssemblyError(
                 asm,
                 new TestRunAggregateException(
-                    $"{tally[TestSuiteStatus.UNKNOWN]} test suite not run yet"
+                    "RimTestRedux.Runner.TestSuitesNotRun".Translate(tally[TestSuiteStatus.UNKNOWN])
                 )
             );
         }

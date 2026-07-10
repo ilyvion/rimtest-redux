@@ -79,7 +79,7 @@ internal sealed class Window_TestRunner : Window
         DrawIconButton(
             ref row,
             Icons.Run,
-            "Run every registered test",
+            "RimTestRedux.RunAllTestsTooltip".Translate(),
             () =>
             {
                 Runner.RunAllRegisteredTests();
@@ -90,21 +90,28 @@ internal sealed class Window_TestRunner : Window
         DrawIconButton(
             ref row,
             Icons.Log,
-            "Log all current results to the debug log",
+            "RimTestRedux.LogResultsTooltip".Translate(),
             Viewer.LogTestsResults
         );
         RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_SECTION_GAP);
 
-        DrawIconButton(ref row, Icons.Collapse, "Collapse all assemblies", CollapseAllAssemblies);
-        DrawIconButton(ref row, Icons.Expand, "Expand all assemblies", ExpandAllAssemblies);
+        DrawIconButton(
+            ref row,
+            Icons.Collapse,
+            "RimTestRedux.CollapseAllTooltip".Translate(),
+            CollapseAllAssemblies
+        );
+        DrawIconButton(
+            ref row,
+            Icons.Expand,
+            "RimTestRedux.ExpandAllTooltip".Translate(),
+            ExpandAllAssemblies
+        );
         RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_SECTION_GAP);
 
         _ = RectCursor.TakeLeft(ref row, SIZE_CONTROLS_ICON_BTN, out var searchIconRect);
         GUI.DrawTexture(searchIconRect, Icons.Search);
-        TooltipHandler.TipRegion(
-            searchIconRect,
-            "Filter the results below by name (regular expression)"
-        );
+        TooltipHandler.TipRegion(searchIconRect, "RimTestRedux.SearchTooltip".Translate());
         RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
 
         try
@@ -200,7 +207,7 @@ internal sealed class Window_TestRunner : Window
         DrawIconButton(
             ref actionsRect,
             Icons.Run,
-            "Run all tests in this assembly",
+            "RimTestRedux.RunAssemblyTooltip".Translate(),
             () =>
             {
                 Runner.RunAssembly(asm);
@@ -217,11 +224,31 @@ internal sealed class Window_TestRunner : Window
         var statsRow = listing.GetRect(HEIGHT_ASSEMBLY_STATS);
         var tally = AssemblyExplorer.TallyTestStatuses(asm);
         var total = tally.Values.Sum();
-        DrawStatCard(ref statsRow, "Tests", total, Color.white);
-        DrawStatCard(ref statsRow, "Passed", tally[TestStatus.PASS], StatusStyle.ColorPass);
-        DrawStatCard(ref statsRow, "Failed", tally[TestStatus.ERROR], StatusStyle.ColorFail);
-        DrawStatCard(ref statsRow, "Skipped", tally[TestStatus.SKIP], StatusStyle.ColorWarn);
-        DrawStatCard(ref statsRow, "Not run", tally[TestStatus.UNKNOWN], StatusStyle.ColorUnknown);
+        DrawStatCard(ref statsRow, "RimTestRedux.StatTests".Translate(), total, Color.white);
+        DrawStatCard(
+            ref statsRow,
+            "RimTestRedux.StatPassed".Translate(),
+            tally[TestStatus.PASS],
+            StatusStyle.ColorPass
+        );
+        DrawStatCard(
+            ref statsRow,
+            "RimTestRedux.StatFailed".Translate(),
+            tally[TestStatus.ERROR],
+            StatusStyle.ColorFail
+        );
+        DrawStatCard(
+            ref statsRow,
+            "RimTestRedux.StatSkipped".Translate(),
+            tally[TestStatus.SKIP],
+            StatusStyle.ColorWarn
+        );
+        DrawStatCard(
+            ref statsRow,
+            "RimTestRedux.StatNotRun".Translate(),
+            tally[TestStatus.UNKNOWN],
+            StatusStyle.ColorUnknown
+        );
 
         listing.GapLine(4f);
 
@@ -240,7 +267,7 @@ internal sealed class Window_TestRunner : Window
         GUI.DrawTexture(chevronRect, isExpanded ? Icons.ChevronExpanded : Icons.ChevronCollapsed);
         RectCursor.TakeLeft(ref suitesHeaderRow, WIDTH_CONTROLS_CONTROL_GAP);
         Text.Anchor = TextAnchor.MiddleLeft;
-        Widgets.Label(suitesHeaderRow, $"Test Suites ({suitesCount})");
+        Widgets.Label(suitesHeaderRow, "RimTestRedux.TestSuitesHeader".Translate(suitesCount));
         Text.Anchor = TextAnchor.UpperLeft;
         if (Widgets.ButtonInvisible(suitesHeaderFullRect))
         {
@@ -288,7 +315,7 @@ internal sealed class Window_TestRunner : Window
 
         _ = RectCursor.TakeLeft(ref row, WIDTH_SUITE_RUN_BTN, out var runSlot);
         var runRect = RectCursor.CenterSquare(runSlot);
-        TooltipHandler.TipRegion(runRect, "Run all tests in this test suite");
+        TooltipHandler.TipRegion(runRect, "RimTestRedux.RunSuiteTooltip".Translate());
         if (Widgets.ButtonImage(runRect, Icons.Run))
         {
             Runner.RunTestSuite(ts);
@@ -321,7 +348,7 @@ internal sealed class Window_TestRunner : Window
         DrawResultBar(barRect, TestSuiteExplorer.TallyTestStatuses(ts));
 
         Text.Anchor = TextAnchor.MiddleCenter;
-        if (Widgets.ButtonText(detailsRect, "Details"))
+        if (Widgets.ButtonText(detailsRect, "RimTestRedux.DetailsButton".Translate()))
         {
             Find.WindowStack.Add(new Window_TestSuiteDetails(ts));
         }

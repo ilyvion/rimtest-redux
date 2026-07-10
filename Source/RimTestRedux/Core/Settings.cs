@@ -56,19 +56,19 @@ public class Settings : ModSettings
 
         options.Begin(canvas);
         options.CheckboxLabeled(
-            "Include RimTest Redux' own test suite",
+            "RimTestRedux.IncludeOwnTestsLabel".Translate(),
             ref _runOwnTests,
-            "if enabled, RimTestRedux will run its' own test suite as well as any mod test suites."
+            "RimTestRedux.IncludeOwnTestsTooltip".Translate()
         );
         options.CheckboxLabeled(
-            "Run tests at startup",
+            "RimTestRedux.RunAtStartupLabel".Translate(),
             ref _runAtStartup,
-            "if enabled, RimTestRedux will run every valid tests at the game startup."
+            "RimTestRedux.RunAtStartupTooltip".Translate()
         );
         options.GapLine();
 
         var buttonRect = options.GetRect(HEIGHT_OPEN_TEST_RUNNER_BTN).LeftPartPixels(200);
-        if (Widgets.ButtonText(buttonRect, "Open Test Runner"))
+        if (Widgets.ButtonText(buttonRect, "RimTestRedux.OpenTestRunnerButton".Translate()))
         {
             if (!Find.WindowStack.IsOpen<Window_TestRunner>())
             {

@@ -10,8 +10,6 @@ namespace RimTestRedux.Patches;
 [HarmonyPatch(typeof(DebugWindowsOpener), nameof(DebugWindowsOpener.DrawButtons))]
 internal static class DebugWindowsOpener_Patch
 {
-    private const string Tooltip = "Open the RimTestRedux test runner";
-
     private static readonly FieldInfo _fieldDebugWindowsOpenerWidgetRow = AccessTools.Field(
         typeof(DebugWindowsOpener),
         "widgetRow"
@@ -58,7 +56,7 @@ internal static class DebugWindowsOpener_Patch
 
     private static void Draw(WidgetRow row)
     {
-        if (row.ButtonIcon(Icons.Testing, Tooltip))
+        if (row.ButtonIcon(Icons.Testing, "RimTestRedux.OpenTestRunnerDebugTooltip".Translate()))
         {
             if (!Find.WindowStack.IsOpen<Window_TestRunner>())
             {

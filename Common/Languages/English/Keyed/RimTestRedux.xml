@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+    <!-- Core/Window_TestRunner.cs, Core/Window_TestSuiteDetails.cs -->
+    <RimTestRedux.RunAllTestsTooltip>Run every registered test</RimTestRedux.RunAllTestsTooltip>
+    <RimTestRedux.LogResultsTooltip>Log all current results to the debug log</RimTestRedux.LogResultsTooltip>
+    <RimTestRedux.CollapseAllTooltip>Collapse all assemblies</RimTestRedux.CollapseAllTooltip>
+    <RimTestRedux.ExpandAllTooltip>Expand all assemblies</RimTestRedux.ExpandAllTooltip>
+    <RimTestRedux.SearchTooltip>Filter the results below by name (regular expression)</RimTestRedux.SearchTooltip>
+    <RimTestRedux.StatTests>Tests</RimTestRedux.StatTests>
+    <RimTestRedux.StatPassed>Passed</RimTestRedux.StatPassed>
+    <RimTestRedux.StatFailed>Failed</RimTestRedux.StatFailed>
+    <RimTestRedux.StatSkipped>Skipped</RimTestRedux.StatSkipped>
+    <RimTestRedux.StatNotRun>Not run</RimTestRedux.StatNotRun>
+    <RimTestRedux.TestSuitesHeader>Test Suites ({0})</RimTestRedux.TestSuitesHeader>
+    <RimTestRedux.RunAssemblyTooltip>Run all tests in this assembly</RimTestRedux.RunAssemblyTooltip>
+    <RimTestRedux.RunSuiteTooltip>Run all tests in this test suite</RimTestRedux.RunSuiteTooltip>
+    <RimTestRedux.RunTestTooltip>Run this test</RimTestRedux.RunTestTooltip>
+    <RimTestRedux.DetailsButton>Details</RimTestRedux.DetailsButton>
+
+    <!-- Core/Settings.cs -->
+    <RimTestRedux.IncludeOwnTestsLabel>Include RimTest Redux' own test suite</RimTestRedux.IncludeOwnTestsLabel>
+    <RimTestRedux.IncludeOwnTestsTooltip>if enabled, RimTestRedux will run its' own test suite as well as any mod test suites.</RimTestRedux.IncludeOwnTestsTooltip>
+    <RimTestRedux.RunAtStartupLabel>Run tests at startup</RimTestRedux.RunAtStartupLabel>
+    <RimTestRedux.RunAtStartupTooltip>if enabled, RimTestRedux will run every valid tests at the game startup.</RimTestRedux.RunAtStartupTooltip>
+    <RimTestRedux.OpenTestRunnerButton>Open Test Runner</RimTestRedux.OpenTestRunnerButton>
+
+    <!-- Patches/DebugWindowsOpener_Patch.cs -->
+    <RimTestRedux.OpenTestRunnerDebugTooltip>Open the RimTestRedux test runner</RimTestRedux.OpenTestRunnerDebugTooltip>
+
+    <!-- Testing/Assertion.cs -->
+    <RimTestRedux.Assertion.NonNullRequired>Expected a non-null value, but the asserted value was null.</RimTestRedux.Assertion.NonNullRequired>
+    <RimTestRedux.Assertion.EqualTo>Expected {0} to be equal to {1}.</RimTestRedux.Assertion.EqualTo>
+    <RimTestRedux.Assertion.NotEqualTo>Expected {0} not to be equal to {1}.</RimTestRedux.Assertion.NotEqualTo>
+    <RimTestRedux.Assertion.LessThan>Expected {0} to be less than {1}.</RimTestRedux.Assertion.LessThan>
+    <RimTestRedux.Assertion.NotLessThan>Expected {0} not to be less than {1}.</RimTestRedux.Assertion.NotLessThan>
+    <RimTestRedux.Assertion.GreaterThan>Expected {0} to be greater than {1}.</RimTestRedux.Assertion.GreaterThan>
+    <RimTestRedux.Assertion.NotGreaterThan>Expected {0} not to be greater than {1}.</RimTestRedux.Assertion.NotGreaterThan>
+    <RimTestRedux.Assertion.BetweenInclusive>Expected {0} to be between (inclusive) {1} and {2}.</RimTestRedux.Assertion.BetweenInclusive>
+    <RimTestRedux.Assertion.NotBetweenInclusive>Expected {0} not to be between (inclusive) {1} and {2}.</RimTestRedux.Assertion.NotBetweenInclusive>
+    <RimTestRedux.Assertion.BetweenExclusive>Expected {0} to be between (exclusive) {1} and {2}.</RimTestRedux.Assertion.BetweenExclusive>
+    <RimTestRedux.Assertion.NotBetweenExclusive>Expected {0} not to be between (exclusive) {1} and {2}.</RimTestRedux.Assertion.NotBetweenExclusive>
+    <RimTestRedux.Assertion.TheSame>Expected {0} to be the same as {1}.</RimTestRedux.Assertion.TheSame>
+    <RimTestRedux.Assertion.NotTheSame>Expected {0} not to be the same as {1}.</RimTestRedux.Assertion.NotTheSame>
+    <RimTestRedux.Assertion.Null>Expected {0} to be null.</RimTestRedux.Assertion.Null>
+    <RimTestRedux.Assertion.NotNull>Expected {0} not to be null.</RimTestRedux.Assertion.NotNull>
+    <RimTestRedux.Assertion.True>Expected {0} to be true.</RimTestRedux.Assertion.True>
+    <RimTestRedux.Assertion.NotTrue>Expected {0} not to be true.</RimTestRedux.Assertion.NotTrue>
+    <RimTestRedux.Assertion.False>Expected {0} to be false.</RimTestRedux.Assertion.False>
+    <RimTestRedux.Assertion.NotFalse>Expected {0} not to be false.</RimTestRedux.Assertion.NotFalse>
+    <RimTestRedux.Assertion.ThrowNot>Expected the function not to throw.</RimTestRedux.Assertion.ThrowNot>
+    <RimTestRedux.Assertion.ThrowExpected>Expected the function to throw.</RimTestRedux.Assertion.ThrowExpected>
+
+    <!-- Testing/Runner.cs -->
+    <RimTestRedux.Runner.ExpectedExceptionType>Expected an exception of type {0} to be thrown, but none was.</RimTestRedux.Runner.ExpectedExceptionType>
+    <RimTestRedux.Runner.ShouldHaveThrown>Should have thrown an exception.</RimTestRedux.Runner.ShouldHaveThrown>
+    <RimTestRedux.Runner.TestsFailed>{0} test failed</RimTestRedux.Runner.TestsFailed>
+    <RimTestRedux.Runner.TestsSkipped>{0} test skipped</RimTestRedux.Runner.TestsSkipped>
+    <RimTestRedux.Runner.TestsNotRun>{0} test not run yet</RimTestRedux.Runner.TestsNotRun>
+    <RimTestRedux.Runner.TestSuitesFailed>{0} test suite failed</RimTestRedux.Runner.TestSuitesFailed>
+    <RimTestRedux.Runner.TestSuitesSkipped>{0} test suite skipped</RimTestRedux.Runner.TestSuitesSkipped>
+    <RimTestRedux.Runner.TestSuitesWarning>{0} test suite have warnings</RimTestRedux.Runner.TestSuitesWarning>
+    <RimTestRedux.Runner.TestSuitesNotRun>{0} test suite not run yet</RimTestRedux.Runner.TestSuitesNotRun>
+</LanguageData>

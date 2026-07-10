@@ -52,9 +52,12 @@ public class RimTestReduxMod : IlyvionMod
 
         if (Settings.RunAtStartup)
         {
-            Runner.RunAllRegisteredTests();
-            StatusExplorer.UpdateAllStatusCounts();
-            Viewer.LogTestsResults();
+            LongEventHandler.ExecuteWhenFinished(() =>
+            {
+                Runner.RunAllRegisteredTests();
+                StatusExplorer.UpdateAllStatusCounts();
+                Viewer.LogTestsResults();
+            });
         }
     }
 
