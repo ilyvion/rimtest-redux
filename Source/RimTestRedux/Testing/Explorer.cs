@@ -707,7 +707,7 @@ public static class Explorer
             }
             catch (Exception e)
             {
-                TestSuiteExplorer.SetTestSuiteError(testSuite, e.InnerException);
+                TestSuiteExplorer.SetTestSuiteError(testSuite, e);
                 TestSuiteExplorer.SetTestSuiteStatus(testSuite, TestSuiteStatus.SKIP);
                 continue;
             }
@@ -739,7 +739,7 @@ public static class Explorer
             }
             catch (Exception e)
             {
-                TestExplorer.SetTestError(test, e.InnerException);
+                TestExplorer.SetTestError(test, e);
                 TestExplorer.SetTestStatus(test, TestStatus.SKIP);
                 continue;
             }
