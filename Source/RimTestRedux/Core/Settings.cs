@@ -711,7 +711,7 @@ public class Settings : ModSettings
                 if (Widgets.ButtonText(detailsRect, "To debug log"))
                 {
                     // TODO
-                    Log.Error(text);
+                    RimTestReduxMod.Instance.LogError(text);
                 }
                 text = text[..(ERROR_CHAR_LIMIT - 5)] + "[...]";
             }

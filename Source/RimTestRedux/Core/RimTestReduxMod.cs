@@ -7,7 +7,7 @@ namespace RimTestRedux;
 /// This is the mod entry point run when every assemblies of loaded mods are now loaded and available.
 /// </summary>
 /// <remarks>We can run test discovery at this point.</remarks>
-public class RimTestReduxMod : Mod
+public class RimTestReduxMod : IlyvionMod
 {
 #pragma warning disable CS8618 // Set by constructor
     /// <summary>
@@ -22,8 +22,8 @@ public class RimTestReduxMod : Mod
     /// </summary>
     public static string PackageId => Instance!.Content.PackageId;
 
-    // /// <inheritdoc/>
-    //protected override bool HasSettings => true;
+    /// <inheritdoc/>
+    protected override bool HasSettings => true;
 
     /// <summary>
     /// Gets the settings for the RimTest Redux mod.
@@ -63,9 +63,4 @@ public class RimTestReduxMod : Mod
         base.DoSettingsWindowContents(inRect);
         Settings.DoWindowContents(inRect);
     }
-
-    ///<summary>
-    /// Mod header in the mod config UI
-    ///</summary>
-    public override string SettingsCategory() => "RimTestRedux";
 }

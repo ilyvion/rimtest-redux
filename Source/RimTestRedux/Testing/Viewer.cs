@@ -5,7 +5,7 @@ namespace RimTestRedux.Testing;
 
 internal static class Viewer
 {
-    private static void LogDetailledErrors(ICollection<Assembly> asms)
+    private static void LogDetailedErrors(ICollection<Assembly> asms)
     {
         foreach (var asm in asms)
         {
@@ -14,17 +14,17 @@ internal static class Viewer
             switch (asmStatus)
             {
                 case AssemblyStatus.WARNING:
-                    Log.Warning(
+                    RimTestReduxMod.Instance.LogWarning(
                         $"[{AssemblyStatusExtension.StatusSymbol(asmStatus)}] {asmName} > {AssemblyExplorer.GetAssemblyError(asm)?.Message}"
                     );
                     break;
                 case AssemblyStatus.ERROR:
-                    Log.Error(
+                    RimTestReduxMod.Instance.LogError(
                         $"[{AssemblyStatusExtension.StatusSymbol(asmStatus)}] {asmName} > {AssemblyExplorer.GetAssemblyError(asm)}"
                     );
                     break;
                 case AssemblyStatus.UNKNOWN:
-                    Log.Message(
+                    RimTestReduxMod.Instance.LogMessage(
                         $"[{AssemblyStatusExtension.StatusSymbol(asmStatus)}] {asmName} > Not Run Yet"
                     );
                     break;
@@ -45,17 +45,17 @@ internal static class Viewer
                 {
                     case TestSuiteStatus.WARNING:
                     case TestSuiteStatus.SKIP:
-                        Log.Warning(
+                        RimTestReduxMod.Instance.LogWarning(
                             $"    [{TestSuiteStatusExtension.StatusSymbol(tsStatus)}] {testSuite.Name} > {TestSuiteExplorer.GetTestSuiteError(testSuite)}"
                         );
                         break;
                     case TestSuiteStatus.ERROR:
-                        Log.Error(
+                        RimTestReduxMod.Instance.LogError(
                             $"    [{TestSuiteStatusExtension.StatusSymbol(tsStatus)}] {testSuite.Name} > {TestSuiteExplorer.GetTestSuiteError(testSuite)}"
                         );
                         break;
                     case TestSuiteStatus.UNKNOWN:
-                        Log.Message(
+                        RimTestReduxMod.Instance.LogMessage(
                             $"    [{TestSuiteStatusExtension.StatusSymbol(tsStatus)}] {testSuite.Name} > Not Run Yet"
                         );
                         break;
@@ -70,17 +70,17 @@ internal static class Viewer
                     switch (tStatus)
                     {
                         case TestStatus.SKIP:
-                            Log.Warning(
+                            RimTestReduxMod.Instance.LogWarning(
                                 $"        [{TestStatusExtension.StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > {TestExplorer.GetTestError(test)}"
                             );
                             continue;
                         case TestStatus.ERROR:
-                            Log.Error(
+                            RimTestReduxMod.Instance.LogError(
                                 $"        [{TestStatusExtension.StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > {TestExplorer.GetTestError(test)}"
                             );
                             continue;
                         case TestStatus.UNKNOWN:
-                            Log.Message(
+                            RimTestReduxMod.Instance.LogMessage(
                                 $"        [{TestStatusExtension.StatusSymbol(tStatus)}] {testSuite.Name}.{test.Name} > Not Run Yet"
                             );
                             continue;
@@ -151,13 +151,13 @@ internal static class Viewer
             {
                 case AssemblyStatus.UNKNOWN:
                 case AssemblyStatus.PASS:
-                    Log.Message(asmResult);
+                    RimTestReduxMod.Instance.LogMessage(asmResult);
                     continue;
                 case AssemblyStatus.WARNING:
-                    Log.Warning(asmResult);
+                    RimTestReduxMod.Instance.LogWarning(asmResult);
                     break;
                 case AssemblyStatus.ERROR:
-                    Log.Error(asmResult);
+                    RimTestReduxMod.Instance.LogError(asmResult);
                     break;
                 default:
                     break;
@@ -174,11 +174,11 @@ internal static class Viewer
             _ = asms.Remove(Assembly.GetExecutingAssembly());
         }
 
-        Log.Message("==TESTING START");
-        Log.Message("__SUMMARY");
+        RimTestReduxMod.Instance.LogMessage("TESTING START");
+        RimTestReduxMod.Instance.LogMessage("SUMMARY");
         LogSummary(asms);
-        Log.Message("__ERRORS");
-        LogDetailledErrors(asms);
-        Log.Message("==TESTING END");
+        RimTestReduxMod.Instance.LogMessage("ERRORS");
+        LogDetailedErrors(asms);
+        RimTestReduxMod.Instance.LogMessage("TESTING END");
     }
 }

@@ -2,7 +2,7 @@
 <ModMetaData>
     <packageId>ilyvion.rimtestredux</packageId>
     <url>https://github.com/ilyvion/rimtest-redux</url>
-    <name>RimTest Redux — Automated Testing Framework</name>
+    <name>RimTest Redux</name>
     <author>ilyvion, LaTrissTitude</author>
     <description>Finally we have unit tests for RimWorld modding! No more manual testing your mods on development, this mod automates the testing process by introducing a testing framework that allows you to test your mods in a simple and easy way. You can save your time and energy, let your computer do the testing for you.</description>
     <supportedVersions>
@@ -16,8 +16,15 @@
             <downloadUrl>https://steamcommunity.com/workshop/filedetails/?id=2009463077</downloadUrl>
             <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
         </li>
+        <li>
+            <packageId>ilyvion.Laboratory</packageId>
+            <displayName>ilyvion's Laboratory</displayName>
+            <downloadUrl>https://github.com/ilyvion/ilyvion-laboratory/releases/latest</downloadUrl>
+            <steamWorkshopUrl>steam://url/CommunityFilePage/3296362231</steamWorkshopUrl>
+        </li>
     </modDependencies>
     <loadAfter>
         <li>brrainz.harmony</li>
+        <li>ilyvion.Laboratory</li>
     </loadAfter>
 </ModMetaData>
