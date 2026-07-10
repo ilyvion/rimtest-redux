@@ -123,7 +123,7 @@ internal sealed class Window_TestRunner : Window
                 FilteredExplorer.UpdateFilter(new Regex(searchRegex, RegexOptions.IgnoreCase));
             }
         }
-        catch
+        catch (ArgumentException)
         {
             FilteredExplorer.UpdateFilter(new Regex(@""));
         }
