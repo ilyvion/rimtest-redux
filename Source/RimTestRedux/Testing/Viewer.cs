@@ -5,6 +5,27 @@ namespace RimTestRedux.Testing;
 
 internal static class Viewer
 {
+    private static bool HasDetailedErrors(ICollection<Assembly> asms)
+    {
+        foreach (var asm in asms)
+        {
+            if (AssemblyExplorer.GetAssemblyStatus(asm) is not AssemblyStatus.PASS)
+            {
+                return true;
+            }
+
+            foreach (var testSuite in Assembly2TestSuiteLink.GetTestSuites(asm))
+            {
+                if (TestSuiteExplorer.GetTestSuiteStatus(testSuite) is not TestSuiteStatus.PASS)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private static void LogDetailedErrors(ICollection<Assembly> asms)
     {
         foreach (var asm in asms)
@@ -177,8 +198,11 @@ internal static class Viewer
         RimTestReduxMod.Instance.LogMessage("TESTING START");
         RimTestReduxMod.Instance.LogMessage("SUMMARY");
         LogSummary(asms);
-        RimTestReduxMod.Instance.LogMessage("ERRORS");
-        LogDetailedErrors(asms);
+        if (HasDetailedErrors(asms))
+        {
+            RimTestReduxMod.Instance.LogMessage("ERRORS");
+            LogDetailedErrors(asms);
+        }
         RimTestReduxMod.Instance.LogMessage("TESTING END");
     }
 }
