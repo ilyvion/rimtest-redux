@@ -4,4 +4,7 @@
         <RootNamespace>RimTestRedux</RootNamespace>
         <AssemblyName>RimTestRedux</AssemblyName>
     </PropertyGroup>
+    <ItemGroup>
+        <Publicize Include="Assembly-CSharp:Verse.DebugWindowsOpener.DrawButtons" />
+    </ItemGroup>
 </Project>

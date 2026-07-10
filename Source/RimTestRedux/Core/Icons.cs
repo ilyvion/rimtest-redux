@@ -15,6 +15,7 @@ internal static class Icons
         "UI/icon_chevron_expanded"
     );
     public static readonly Texture2D Run = ContentFinder<Texture2D>.Get("UI/icon_run");
+    public static readonly Texture2D Testing = ContentFinder<Texture2D>.Get("UI/icon_testing");
     public static readonly Texture2D Log = ContentFinder<Texture2D>.Get("UI/icon_log");
     public static readonly Texture2D Search = ContentFinder<Texture2D>.Get("UI/icon_search");
     public static readonly Texture2D StatusError = ContentFinder<Texture2D>.Get(

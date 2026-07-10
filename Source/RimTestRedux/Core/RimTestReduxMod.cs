@@ -44,6 +44,9 @@ public class RimTestReduxMod : IlyvionMod
 
         Instance = this;
 
+        var harmony = new Harmony(content.PackageId);
+        harmony.PatchAll(Assembly.GetExecutingAssembly());
+
         Explorer.ExploreAndRegisterAssemblies();
         StatusExplorer.UpdateAllStatusCounts();
 
