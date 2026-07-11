@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-07-11
+
 ### Added
 
 - A new icon has been added to the developer debug toolbar (visible in Dev Mode). Clicking it opens the test runner directly, without having to go through the mod's settings.
@@ -29,3 +31,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The test runner window no longer re-scans every assembly, suite, and test's status on every single frame it's open, which was causing needless CPU usage (and stutter with large test suites) the whole time the window was visible. Status counts now only recompute when something that could actually change them happens (running tests, changing the search filter, or toggling a status filter).
 
 [Unreleased]: https://github.com/ilyvion/rimtest-redux/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/ilyvion/rimtest-redux/releases/tag/v0.1.0
