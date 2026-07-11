@@ -41,8 +41,8 @@ public class Settings : ModSettings
     public override void ExposeData()
     {
         base.ExposeData();
-        Scribe_Values.Look(ref _runOwnTests, "RunOwnTests", true);
-        Scribe_Values.Look(ref _runAtStartup, "RunAtStartup", true);
+        Scribe_Values.Look(ref _runOwnTests, "runOwnTests", true);
+        Scribe_Values.Look(ref _runAtStartup, "runAtStartup", true);
     }
 
     /// <summary>
