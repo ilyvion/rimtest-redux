@@ -180,26 +180,6 @@ public static class FilteredExplorer
     internal static bool passEnabledTS = true;
 
     /// <summary>
-    /// Are failed state T shown?
-    /// </summary>
-    internal static bool failEnabledT = true;
-
-    /// <summary>
-    /// Are unknown state T shown?
-    /// </summary>
-    internal static bool unknownEnabledT = true;
-
-    /// <summary>
-    /// Are skipped state T shown?
-    /// </summary>
-    internal static bool skipEnabledT = true;
-
-    /// <summary>
-    /// Are passed state T shown?
-    /// </summary>
-    internal static bool passEnabledT = true;
-
-    /// <summary>
     /// </summary>
     /// <param name="filter"></param>
     public static void UpdateFilter(Regex filter) => FilteredExplorer.filter = filter;
@@ -235,20 +215,6 @@ public static class FilteredExplorer
 
     /// <summary>
     /// </summary>
-    /// <param name="t"></param>
-    /// <returns></returns>
-    public static bool DoesTestStatusMatchesFilter(MethodInfo t) =>
-        TestExplorer.GetTestStatus(t) switch
-        {
-            TestStatus.SKIP => skipEnabledT,
-            TestStatus.ERROR => failEnabledT,
-            TestStatus.UNKNOWN => unknownEnabledT,
-            TestStatus.PASS => passEnabledT,
-            _ => false,
-        };
-
-    /// <summary>
-    /// </summary>
     /// <param name="asm"></param>
     /// <returns></returns>
     public static bool DoesAssemblyMatchesFilter(Assembly asm) =>
@@ -265,15 +231,6 @@ public static class FilteredExplorer
             ? throw new ArgumentNullException(nameof(testSuite))
             : DoesTestSuiteMatchesTextFilter(testSuite)
                 && DoesTestSuiteStatusMatchesFilter(testSuite);
-
-    /// <summary>
-    /// </summary>
-    /// <param name="test"></param>
-    /// <returns></returns>
-    public static bool DoesTestMatchesFilter(MethodInfo test) =>
-        test == null
-            ? throw new ArgumentNullException(nameof(test))
-            : DoesTestMatchesTextFilter(test) && DoesTestStatusMatchesFilter(test);
 
     /// <summary>
     /// Matches only against the free-text search filter, ignoring the show/hide status toggles.
@@ -331,14 +288,14 @@ public static class FilteredExplorer
     /// </summary>
     /// <returns></returns>
     public static IEnumerable<MethodInfo> GetFilteredTests() =>
-        [.. TestExplorer.AllKnownTests.Where(DoesTestMatchesFilter)];
+        [.. TestExplorer.AllKnownTests.Where(DoesTestMatchesTextFilter)];
 
     /// <summary>
     /// </summary>
     /// <param name="ts"></param>
     /// <returns></returns>
     public static IEnumerable<MethodInfo> GetFilteredTests(Type ts) =>
-        [.. TestSuite2TestLink.GetTests(ts).Where(DoesTestMatchesFilter)];
+        [.. TestSuite2TestLink.GetTests(ts).Where(DoesTestMatchesTextFilter)];
 }
 
 /// <summary>

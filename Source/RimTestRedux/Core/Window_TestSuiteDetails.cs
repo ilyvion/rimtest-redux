@@ -26,6 +26,14 @@ internal sealed class Window_TestSuiteDetails : Window
     private readonly Dictionary<MethodInfo, Vector2> detailScrollPositions = [];
     private Vector2 scrollPosition = Vector2.zero;
 
+    // These filters are local to this window rather than sharing FilteredExplorer's static
+    // state, so hiding a status here doesn't also filter the main test runner window's tree
+    // and summary counts.
+    private bool failEnabledT = true;
+    private bool skipEnabledT = true;
+    private bool unknownEnabledT = true;
+    private bool passEnabledT = true;
+
     public Window_TestSuiteDetails(Type testSuite)
     {
         this.testSuite = testSuite;
@@ -90,33 +98,46 @@ internal sealed class Window_TestSuiteDetails : Window
             Icons.StatusError,
             "RimTestRedux.StatFailed".Translate(),
             tally[TestStatus.ERROR],
-            ref FilteredExplorer.failEnabledT
+            ref failEnabledT
         );
         StatusFilterBadge.Draw(
             ref filterRow,
             Icons.StatusSkip,
             "RimTestRedux.StatSkipped".Translate(),
             tally[TestStatus.SKIP],
-            ref FilteredExplorer.skipEnabledT
+            ref skipEnabledT
         );
         StatusFilterBadge.Draw(
             ref filterRow,
             Icons.StatusUnknown,
             "RimTestRedux.StatNotRun".Translate(),
             tally[TestStatus.UNKNOWN],
-            ref FilteredExplorer.unknownEnabledT
+            ref unknownEnabledT
         );
         StatusFilterBadge.Draw(
             ref filterRow,
             Icons.StatusPass,
             "RimTestRedux.StatPassed".Translate(),
             tally[TestStatus.PASS],
-            ref FilteredExplorer.passEnabledT
+            ref passEnabledT
         );
 
         listing.GapLine();
 
-        var tests = FilteredExplorer.GetFilteredTests(testSuite).OrderBy(t => t.Name).ToList();
+        var tests = TestSuite2TestLink
+            .GetTests(testSuite)
+            .Where(t =>
+                TestExplorer.GetTestStatus(t) switch
+                {
+                    TestStatus.SKIP => skipEnabledT,
+                    TestStatus.ERROR => failEnabledT,
+                    TestStatus.UNKNOWN => unknownEnabledT,
+                    TestStatus.PASS => passEnabledT,
+                    _ => false,
+                }
+            )
+            .OrderBy(t => t.Name)
+            .ToList();
 
         var listRect = listing.GetRect(inRect.height - listing.CurHeight - GAP);
         var viewRect = new Rect(0, 0, listRect.width - GenUI.ScrollBarWidth, CalcListHeight(tests));
