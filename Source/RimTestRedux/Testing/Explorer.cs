@@ -129,6 +129,7 @@ public static class TimeElapsedExplorer
 /// <summary>
 /// Keeps track of filtered tests for easy test finding
 /// </summary>
+[HotSwappable]
 public static class FilteredExplorer
 {
     private static Regex filter = new(@"");
@@ -253,10 +254,7 @@ public static class FilteredExplorer
     public static bool DoesAssemblyMatchesFilter(Assembly asm) =>
         asm == null
             ? throw new ArgumentNullException(nameof(asm))
-            : (
-                filter.IsMatch(asm.GetName().Name)
-                || Assembly2TestSuiteLink.GetTestSuites(asm).Any(DoesTestSuiteMatchesFilter)
-            ) && DoesAssemblyStatusMatchesFilter(asm);
+            : DoesAssemblyMatchesTextFilter(asm) && DoesAssemblyStatusMatchesFilter(asm);
 
     /// <summary>
     /// </summary>
@@ -265,10 +263,8 @@ public static class FilteredExplorer
     public static bool DoesTestSuiteMatchesFilter(Type testSuite) =>
         testSuite == null
             ? throw new ArgumentNullException(nameof(testSuite))
-            : (
-                filter.IsMatch(testSuite.Name)
-                || TestSuite2TestLink.GetTests(testSuite).Any(DoesTestMatchesFilter)
-            ) && DoesTestSuiteStatusMatchesFilter(testSuite);
+            : DoesTestSuiteMatchesTextFilter(testSuite)
+                && DoesTestSuiteStatusMatchesFilter(testSuite);
 
     /// <summary>
     /// </summary>
@@ -277,7 +273,40 @@ public static class FilteredExplorer
     public static bool DoesTestMatchesFilter(MethodInfo test) =>
         test == null
             ? throw new ArgumentNullException(nameof(test))
-            : filter.IsMatch(test.Name) && DoesTestStatusMatchesFilter(test);
+            : DoesTestMatchesTextFilter(test) && DoesTestStatusMatchesFilter(test);
+
+    /// <summary>
+    /// Matches only against the free-text search filter, ignoring the show/hide status toggles.
+    /// Used for status count badges, which should reflect real counts even when a status is hidden.
+    /// </summary>
+    /// <param name="asm"></param>
+    /// <returns></returns>
+    public static bool DoesAssemblyMatchesTextFilter(Assembly asm) =>
+        asm == null
+            ? throw new ArgumentNullException(nameof(asm))
+            : filter.IsMatch(asm.GetName().Name)
+                || Assembly2TestSuiteLink.GetTestSuites(asm).Any(DoesTestSuiteMatchesTextFilter);
+
+    /// <summary>
+    /// Matches only against the free-text search filter, ignoring the show/hide status toggles.
+    /// Used for status count badges, which should reflect real counts even when a status is hidden.
+    /// </summary>
+    /// <param name="testSuite"></param>
+    /// <returns></returns>
+    public static bool DoesTestSuiteMatchesTextFilter(Type testSuite) =>
+        testSuite == null
+            ? throw new ArgumentNullException(nameof(testSuite))
+            : filter.IsMatch(testSuite.Name)
+                || TestSuite2TestLink.GetTests(testSuite).Any(DoesTestMatchesTextFilter);
+
+    /// <summary>
+    /// Matches only against the free-text search filter, ignoring the show/hide status toggles.
+    /// Used for status count badges, which should reflect real counts even when a status is hidden.
+    /// </summary>
+    /// <param name="test"></param>
+    /// <returns></returns>
+    public static bool DoesTestMatchesTextFilter(MethodInfo test) =>
+        test == null ? throw new ArgumentNullException(nameof(test)) : filter.IsMatch(test.Name);
 
     /// <summary>
     /// </summary>
@@ -344,8 +373,8 @@ public static class StatusExplorer
     /// <param name="status"></param>
     public static void UpdateAssemblyStatusCount(AssemblyStatus status)
     {
-        var value = FilteredExplorer
-            .GetFilteredAssemblies()
+        var value = AssemblyExplorer
+            .AllKnownAssemblies.Where(FilteredExplorer.DoesAssemblyMatchesTextFilter)
             .Count(asm => AssemblyExplorer.GetAssemblyStatus(asm) == status);
         if (!asmStatus2count.TryAdd(status, value))
         {
@@ -372,8 +401,8 @@ public static class StatusExplorer
     /// <param name="status"></param>
     public static void UpdateTestSuiteStatusCount(TestSuiteStatus status)
     {
-        var value = FilteredExplorer
-            .GetFilteredTestSuites()
+        var value = TestSuiteExplorer
+            .AllKnownTestSuites.Where(FilteredExplorer.DoesTestSuiteMatchesTextFilter)
             .Count(ts => TestSuiteExplorer.GetTestSuiteStatus(ts) == status);
         if (!tsStatus2count.TryAdd(status, value))
         {
@@ -399,8 +428,8 @@ public static class StatusExplorer
     /// <param name="status"></param>
     public static void UpdateTestStatusCount(TestStatus status)
     {
-        var value = FilteredExplorer
-            .GetFilteredTests()
+        var value = TestExplorer
+            .AllKnownTests.Where(FilteredExplorer.DoesTestMatchesTextFilter)
             .Count(t => TestExplorer.GetTestStatus(t) == status);
         if (!tStatus2count.TryAdd(status, value))
         {
