@@ -224,6 +224,8 @@ public static class Runner
     }
 
     /// <summary>
+    /// Runs the tests of every registered assembly, skipping the mod's own assembly unless
+    /// <see cref="Core.Settings.RunOwnTests"/> is enabled.
     /// </summary>
     public static void RunAllRegisteredTests()
     {
