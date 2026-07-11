@@ -117,6 +117,7 @@ internal sealed class Window_TestRunner : Window
         TooltipHandler.TipRegion(searchIconRect, "RimTestRedux.SearchTooltip".Translate());
         RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
 
+        TooltipHandler.TipRegion(row, "RimTestRedux.SearchTooltip".Translate());
         try
         {
             var searchRegexTmp = Widgets.TextField(row, searchRegex);
