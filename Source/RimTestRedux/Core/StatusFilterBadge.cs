@@ -1,3 +1,5 @@
+using RimTestRedux.Testing;
+
 namespace RimTestRedux.Core;
 
 /// <summary>
@@ -52,6 +54,7 @@ internal static class StatusFilterBadge
         if (Widgets.ButtonInvisible(rect))
         {
             enabled = !enabled;
+            StatusExplorer.UpdateAllStatusCounts();
         }
 
         RectCursor.TakeLeft(ref row, WIDTH_GAP);

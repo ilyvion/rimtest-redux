@@ -50,7 +50,6 @@ internal sealed class Window_TestRunner : Window
     /// </summary>
     public override void DoWindowContents(Rect canvas)
     {
-        StatusExplorer.UpdateAllStatusCounts();
         var options = new Listing_Standard();
 
         options.Begin(canvas);
@@ -125,11 +124,13 @@ internal sealed class Window_TestRunner : Window
             {
                 searchRegex = searchRegexTmp;
                 FilteredExplorer.UpdateFilter(new Regex(searchRegex, RegexOptions.IgnoreCase));
+                StatusExplorer.UpdateAllStatusCounts();
             }
         }
         catch (ArgumentException)
         {
             FilteredExplorer.UpdateFilter(new Regex(@""));
+            StatusExplorer.UpdateAllStatusCounts();
         }
 
         bar.Gap(GAP_CONTROLS_ROW);

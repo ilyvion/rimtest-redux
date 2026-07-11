@@ -192,6 +192,7 @@ internal sealed class Window_TestSuiteDetails : Window
         if (Widgets.ButtonImage(runRect, Icons.Run))
         {
             Runner.RunTest(test);
+            StatusExplorer.UpdateAllStatusCounts();
             TimeElapsedExplorer.UpdateAssemblyTimeElapsed(test.DeclaringType!.Assembly);
         }
         var prevFont = Text.Font;

@@ -24,5 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The test runner's search box is no longer case-sensitive, so searching for a test or suite no longer requires typing its name with exact capitalization.
 - An assembly or test suite that hasn't been run yet now correctly shows "--" for its duration instead of "0 ms".
+- The test runner window no longer re-scans every assembly, suite, and test's status on every single frame it's open, which was causing needless CPU usage (and stutter with large test suites) the whole time the window was visible. Status counts now only recompute when something that could actually change them happens (running tests, changing the search filter, or toggling a status filter).
 
 [Unreleased]: https://github.com/ilyvion/rimtest-redux/compare/v0.1.0...HEAD
