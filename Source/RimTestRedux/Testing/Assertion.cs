@@ -76,19 +76,30 @@ public class Assertion
     /// Negation flag, can be double negated with multiple uses of the .Not grammar, used to negate a check expectation. (i.e. Assert(1).Not.To.Be.EqualTo(2))
     /// </summary>
     protected bool Negated { get; set; }
+
+    /// <summary>
+    /// Base constructor, restricted to the specialized Assertion subtypes defined in this assembly.
+    /// </summary>
+    /// <remarks>Not meant to be instantiated directly; use <see cref="Assert"/>, <see cref="AssertCollection"/>, or <see cref="AssertFunc(Func{dynamic})"/> instead.</remarks>
+    private protected Assertion() { }
 }
 
 /// <summary>
 /// Specialized Assertion for Values
 /// </summary>
 /// <remarks>Allows the EqualTo, LessThan, GreaterThan, BetweenInclusive, BetweenExclusive, SameValueAs, SameReferenceAs, Null, True and False checks.</remarks>
-/// <remarks>
-/// base constructor
-/// </remarks>
-/// <param name="thing">The value to check</param>
-public class AssertValue([AllowNull] IComparable thing) : Assertion()
+public class AssertValue : Assertion
 {
-    private readonly IComparable? thing = thing;
+    private readonly IComparable? thing;
+
+    /// <summary>
+    /// base constructor
+    /// </summary>
+    /// <param name="thing">The value to check</param>
+    internal AssertValue([AllowNull] IComparable thing)
+    {
+        this.thing = thing;
+    }
 
     /// <summary>
     /// Returns the asserted value, or throws an AssertionException if it's null.
@@ -372,15 +383,20 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
 /// Specialized Assertion for Collections
 /// </summary>
 /// <remarks>Allows the Contains, Empty and Count checks.</remarks>
-/// <remarks>
-/// base constructor
-/// </remarks>
-/// <param name="thing">The collection to check</param>
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-public class AssertCollection([AllowNull] IEnumerable thing) : Assertion()
+public class AssertCollection : Assertion
 #pragma warning restore CA1711
 {
-    private readonly IEnumerable? thing = thing;
+    private readonly IEnumerable? thing;
+
+    /// <summary>
+    /// base constructor
+    /// </summary>
+    /// <param name="thing">The collection to check</param>
+    internal AssertCollection([AllowNull] IEnumerable thing)
+    {
+        this.thing = thing;
+    }
 
     /// <summary>
     /// Returns the asserted collection, or throws an AssertionException if it's null.
@@ -522,8 +538,7 @@ public class AssertFunc : Assertion
     /// base constructor
     /// </summary>
     /// <param name="thing">The function to check</param>
-    public AssertFunc(Func<dynamic> thing)
-        : base()
+    internal AssertFunc(Func<dynamic> thing)
     {
         func = thing ?? throw new ArgumentNullException(nameof(thing));
     }
@@ -566,13 +581,12 @@ public class AssertFunc : Assertion
     public AssertFunc Do => this;
 
     /// <summary>
-    /// Internal constructor for AssertAction usage
+    /// Constructor for AssertAction usage
     /// </summary>
-    /// <remarks>Do NOT use manually</remarks>
 #pragma warning disable CS8618
-    protected AssertFunc()
+    private protected AssertFunc()
 #pragma warning restore CS8618
-        : base() { }
+    { }
 
     /// <summary>
     /// Check: executing asserted callable throws an error.
@@ -607,13 +621,18 @@ public class AssertFunc : Assertion
 /// Specialized Assertion for Actions
 /// </summary>
 /// <remarks>Allows the Throw check.</remarks>
-/// <remarks>
-/// base constructor
-/// </remarks>
-/// <param name="thing">The function to check</param>
-public class AssertAction(Action thing) : AssertFunc()
+public class AssertAction : AssertFunc
 {
-    private readonly Action action = thing ?? throw new ArgumentNullException(nameof(thing));
+    private readonly Action action;
+
+    /// <summary>
+    /// base constructor
+    /// </summary>
+    /// <param name="thing">The function to check</param>
+    internal AssertAction(Action thing)
+    {
+        action = thing ?? throw new ArgumentNullException(nameof(thing));
+    }
 
     /// <summary>
     /// Negation grammar link, negates the current assertion.

@@ -3,7 +3,7 @@
 /// <summary>
 /// Registered Assembly current test execution status.
 /// </summary>
-public enum AssemblyStatus
+internal enum AssemblyStatus
 {
     /// <summary>
     /// Any test suite fails
@@ -29,7 +29,7 @@ public enum AssemblyStatus
 /// <summary>
 /// Utils for AssemblyStatus
 /// </summary>
-public static class AssemblyStatusExtension
+internal static class AssemblyStatusExtension
 {
     /// <summary>
     /// Value to string symbol converter

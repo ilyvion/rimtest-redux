@@ -3,7 +3,7 @@
 /// <summary>
 /// Registered Test current execution status.
 /// </summary>
-public enum TestStatus
+internal enum TestStatus
 {
     /// <summary>
     /// invalid test
@@ -29,7 +29,7 @@ public enum TestStatus
 /// <summary>
 /// Utils for TestStatus
 /// </summary>
-public static class TestStatusExtension
+internal static class TestStatusExtension
 {
     /// <summary>
     /// Value to string symbol converter

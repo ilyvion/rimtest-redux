@@ -3,7 +3,7 @@
 /// <summary>
 /// Registered Test Suite current test execution status.
 /// </summary>
-public enum TestSuiteStatus
+internal enum TestSuiteStatus
 {
     /// <summary>
     /// Invalid Test Suite
@@ -34,7 +34,7 @@ public enum TestSuiteStatus
 /// <summary>
 /// Utils for TestStatus
 /// </summary>
-public static class TestSuiteStatusExtension
+internal static class TestSuiteStatusExtension
 {
     /// <summary>
     /// Value to string symbol converter

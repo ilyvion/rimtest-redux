@@ -6,7 +6,7 @@ namespace RimTestRedux.Testing;
 /// <summary>
 /// Time profiling system
 /// </summary>
-public static class TimeElapsedExplorer
+internal static class TimeElapsedExplorer
 {
     private static readonly Dictionary<Assembly, double> asm2TimeElapsed = [];
     private static readonly Dictionary<Type, double> testSuite2TimeElapsed = [];
@@ -139,7 +139,7 @@ public static class TimeElapsedExplorer
 /// Keeps track of filtered tests for easy test finding
 /// </summary>
 [HotSwappable]
-public static class FilteredExplorer
+internal static class FilteredExplorer
 {
     private static Regex filter = new(@"");
 
@@ -320,7 +320,7 @@ public static class FilteredExplorer
 /// <summary>
 /// Keeps track of test statuses
 /// </summary>
-public static class StatusExplorer
+internal static class StatusExplorer
 {
     private static readonly Dictionary<AssemblyStatus, int> asmStatus2count = [];
     private static readonly Dictionary<TestSuiteStatus, int> tsStatus2count = [];
@@ -439,7 +439,7 @@ public static class StatusExplorer
 /// <summary>
 /// Stores and manages Assembly level data, aka known statuses and exceptions.
 /// </summary>
-public static class AssemblyExplorer
+internal static class AssemblyExplorer
 {
     private static readonly Dictionary<Assembly, AssemblyStatus> asm2Status = [];
     private static readonly Dictionary<Assembly, Exception?> asm2Error = [];
@@ -512,7 +512,7 @@ public static class AssemblyExplorer
 /// <summary>
 /// Stores and manage the links between registered assemblies and their registered test suites
 /// </summary>
-public static class Assembly2TestSuiteLink
+internal static class Assembly2TestSuiteLink
 {
     private static readonly IDictionary<Assembly, ISet<Type>> asm2TestSuites =
         new Dictionary<Assembly, ISet<Type>>();
@@ -551,7 +551,7 @@ public static class Assembly2TestSuiteLink
 /// <summary>
 /// Stores and manages Test Suite level data, aka known statuses and exceptions.
 /// </summary>
-public static class TestSuiteExplorer
+internal static class TestSuiteExplorer
 {
     private static readonly Dictionary<Type, TestSuiteStatus> testSuite2Status = [];
     private static readonly Dictionary<Type, Exception?> testSuite2Error = [];
@@ -621,7 +621,7 @@ public static class TestSuiteExplorer
 /// <summary>
 /// Stores and manage the links between registered test suites and their registered tests
 /// </summary>
-public static class TestSuite2TestLink
+internal static class TestSuite2TestLink
 {
     private static readonly Dictionary<Type, ISet<MethodInfo>> testSuite2Tests = [];
 
@@ -653,7 +653,7 @@ public static class TestSuite2TestLink
 /// <summary>
 /// Stores and manages a test suite's registered [BeforeEach]/[AfterEach] hooks.
 /// </summary>
-public static class TestSuite2HookLink
+internal static class TestSuite2HookLink
 {
     private static readonly Dictionary<Type, MethodInfo?> testSuite2BeforeEach = [];
     private static readonly Dictionary<Type, MethodInfo?> testSuite2AfterEach = [];
@@ -694,7 +694,7 @@ public static class TestSuite2HookLink
 /// <summary>
 /// Stores and manages Test level data, aka known statuses and exceptions.
 /// </summary>
-public static class TestExplorer
+internal static class TestExplorer
 {
     private static readonly Dictionary<MethodInfo, TestStatus> test2Status = [];
     private static readonly Dictionary<MethodInfo, Exception?> test2Error = [];
@@ -748,7 +748,7 @@ public static class TestExplorer
 /// <summary>
 /// Explores and registers every tested assembly, test suites and tests currently loaded.
 /// </summary>
-public static class Explorer
+internal static class Explorer
 {
     /// <summary>
     /// Explores every assembly loaded in the current app domain, registering any test suites (and their tests and hooks) found within.

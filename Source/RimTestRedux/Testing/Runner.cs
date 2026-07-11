@@ -6,7 +6,7 @@ namespace RimTestRedux.Testing;
 /// <summary>
 /// Execute registered tests and update the status of registered tests, test suites and tested assemblies
 /// </summary>
-public static class Runner
+internal static class Runner
 {
     /// <summary>
     /// Check a test validity and run it if possible.

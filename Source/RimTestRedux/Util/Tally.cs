@@ -13,7 +13,7 @@
 /// ]]>
 /// </example>
 /// <typeparam name="T">Enumeration</typeparam>
-public class Tally<T> : Dictionary<T, int>
+internal sealed class Tally<T> : Dictionary<T, int>
     where T : Enum
 {
     /// <summary>
