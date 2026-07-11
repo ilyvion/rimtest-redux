@@ -56,6 +56,12 @@
     <RimTestRedux.Assertion.NotFalse>Expected {0} not to be false.</RimTestRedux.Assertion.NotFalse>
     <RimTestRedux.Assertion.ThrowNot>Expected the function not to throw.</RimTestRedux.Assertion.ThrowNot>
     <RimTestRedux.Assertion.ThrowExpected>Expected the function to throw.</RimTestRedux.Assertion.ThrowExpected>
+    <RimTestRedux.Assertion.Contains>Expected {0} to contain {1}.</RimTestRedux.Assertion.Contains>
+    <RimTestRedux.Assertion.NotContains>Expected {0} not to contain {1}.</RimTestRedux.Assertion.NotContains>
+    <RimTestRedux.Assertion.Empty>Expected {0} to be empty.</RimTestRedux.Assertion.Empty>
+    <RimTestRedux.Assertion.NotEmpty>Expected {0} not to be empty.</RimTestRedux.Assertion.NotEmpty>
+    <RimTestRedux.Assertion.Count>Expected {0} to have {1} element(s), but it had {2}.</RimTestRedux.Assertion.Count>
+    <RimTestRedux.Assertion.NotCount>Expected {0} not to have {1} element(s), but it did.</RimTestRedux.Assertion.NotCount>
 
     <!-- Testing/Runner.cs -->
     <RimTestRedux.Runner.ExpectedExceptionType>Expected an exception of type {0} to be thrown, but none was.</RimTestRedux.Runner.ExpectedExceptionType>

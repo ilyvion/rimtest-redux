@@ -50,6 +50,13 @@ public class Assertion
     public static AssertValue Assert([AllowNull] IComparable thing) => new(thing);
 
     /// <summary>
+    /// Entry point for collection/enumerable based assertions
+    /// </summary>
+    /// <param name="thing">A collection</param>
+    /// <returns>An AssertCollection, specialized in asserting collections</returns>
+    public static AssertCollection AssertCollection([AllowNull] IEnumerable thing) => new(thing);
+
+    /// <summary>
     /// Entry point for Function based assertions
     /// </summary>
     /// <param name="thing">A function</param>
@@ -356,6 +363,148 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
                 (
                     Negated ? "RimTestRedux.Assertion.NotFalse" : "RimTestRedux.Assertion.False"
                 ).Translate(thing!.ToString())
+            );
+        }
+    }
+}
+
+/// <summary>
+/// Specialized Assertion for Collections
+/// </summary>
+/// <remarks>Allows the Contains, Empty and Count checks.</remarks>
+/// <remarks>
+/// base constructor
+/// </remarks>
+/// <param name="thing">The collection to check</param>
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix
+public class AssertCollection([AllowNull] IEnumerable thing) : Assertion()
+#pragma warning restore CA1711
+{
+    private readonly IEnumerable? thing = thing;
+
+    /// <summary>
+    /// Returns the asserted collection, or throws an AssertionException if it's null.
+    /// </summary>
+    private IEnumerable RequireNonNull() =>
+        thing ?? throw new AssertionException("RimTestRedux.Assertion.NonNullRequired".Translate());
+
+    private static string Describe(IEnumerable collection) =>
+        $"[{string.Join(", ", collection.Cast<object>().Select(item => item?.ToString() ?? "null"))}]";
+
+    /// <summary>
+    /// Negation grammar link, negates the current assertion.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Not
+    {
+        get
+        {
+            Negated = !Negated;
+            return this;
+        }
+    }
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection To => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Is => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Be => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Do => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Have => this;
+
+    /// <summary>
+    /// Check: asserted collection CONTAINS item
+    /// </summary>
+    /// <param name="item">the item to look for</param>
+    public void Contain(object item)
+    {
+        var collection = RequireNonNull();
+        var result = collection.Cast<object>().Any(element => Equals(element, item));
+        if (Negated)
+        {
+            result = !result;
+        }
+
+        if (!result)
+        {
+            throw new AssertionException(
+                (
+                    Negated
+                        ? "RimTestRedux.Assertion.NotContains"
+                        : "RimTestRedux.Assertion.Contains"
+                ).Translate(Describe(collection), item?.ToString() ?? "null")
+            );
+        }
+    }
+
+    /// <summary>
+    /// Check: asserted collection is EMPTY
+    /// </summary>
+    public void Empty()
+    {
+        var collection = RequireNonNull();
+        var result = !collection.Cast<object>().Any();
+        if (Negated)
+        {
+            result = !result;
+        }
+
+        if (!result)
+        {
+            throw new AssertionException(
+                (
+                    Negated ? "RimTestRedux.Assertion.NotEmpty" : "RimTestRedux.Assertion.Empty"
+                ).Translate(Describe(collection))
+            );
+        }
+    }
+
+    /// <summary>
+    /// Check: asserted collection has exactly expectedCount elements
+    /// </summary>
+    /// <param name="expectedCount">the expected number of elements</param>
+    public void Count(int expectedCount)
+    {
+        var collection = RequireNonNull();
+        var actualCount = collection.Cast<object>().Count();
+        var result = actualCount == expectedCount;
+        if (Negated)
+        {
+            result = !result;
+        }
+
+        if (!result)
+        {
+            throw new AssertionException(
+                (
+                    Negated ? "RimTestRedux.Assertion.NotCount" : "RimTestRedux.Assertion.Count"
+                ).Translate(
+                    Describe(collection),
+                    expectedCount.ToString(CultureInfo.InvariantCulture),
+                    actualCount.ToString(CultureInfo.InvariantCulture)
+                )
             );
         }
     }
