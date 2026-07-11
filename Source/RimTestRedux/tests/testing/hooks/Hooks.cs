@@ -59,27 +59,27 @@ internal static class Hooks
 {
     [Test]
     public static void PassWhenValidHook() =>
-        Assertion
-            .AssertFunc(() =>
+        Assert
+            .ThatFunc(() =>
                 Validator.IsValidHook(
                     typeof(MockHooksSuite).GetMethod(nameof(MockHooksSuite.SetUp))
                 )
             )
-            .Not.To.Throw();
+            .Does.Not.Throw();
 
     [Test]
     public static void IsValidHookThrowWhenNull() =>
-        Assertion.AssertFunc(() => Validator.IsValidHook(null!)).To.Throw();
+        Assert.ThatFunc(() => Validator.IsValidHook(null!)).Does.Throw();
 
     [Test]
     public static void IsValidHookThrowWhenNonVoidReturn() =>
-        Assertion
-            .AssertFunc(() =>
+        Assert
+            .ThatFunc(() =>
                 Validator.IsValidHook(
                     typeof(MockInvalidHookSuite).GetMethod(nameof(MockInvalidHookSuite.SetUp))
                 )
             )
-            .To.Throw();
+            .Does.Throw();
 
     [Test]
     public static void ExploreAndRegisterHooksRegistersBeforeAndAfterEach()
@@ -87,12 +87,12 @@ internal static class Hooks
         var suite = typeof(MockHooksSuite);
         Explorer.ExploreAndRegisterHooks(suite);
 
-        Assertion
-            .Assert(TestSuite2HookLink.GetBeforeEach(suite)?.Name)
-            .EqualTo(nameof(MockHooksSuite.SetUp));
-        Assertion
-            .Assert(TestSuite2HookLink.GetAfterEach(suite)?.Name)
-            .EqualTo(nameof(MockHooksSuite.TearDown));
+        Assert
+            .That(TestSuite2HookLink.GetBeforeEach(suite)?.Name)
+            .Is.EqualTo(nameof(MockHooksSuite.SetUp));
+        Assert
+            .That(TestSuite2HookLink.GetAfterEach(suite)?.Name)
+            .Is.EqualTo(nameof(MockHooksSuite.TearDown));
     }
 
     [Test]
@@ -101,21 +101,21 @@ internal static class Hooks
         var suite = typeof(MockNoHooksSuite);
         Explorer.ExploreAndRegisterHooks(suite);
 
-        Assertion.Assert(TestSuite2HookLink.GetBeforeEach(suite) is null).To.Be.True();
-        Assertion.Assert(TestSuite2HookLink.GetAfterEach(suite) is null).To.Be.True();
+        Assert.That(TestSuite2HookLink.GetBeforeEach(suite) is null).Is.True();
+        Assert.That(TestSuite2HookLink.GetAfterEach(suite) is null).Is.True();
     }
 
     [Test]
     public static void ExploreAndRegisterHooksThrowWhenMultipleBeforeEach() =>
-        Assertion
-            .AssertFunc(() => Explorer.ExploreAndRegisterHooks(typeof(MockTooManyBeforeEachSuite)))
-            .To.Throw();
+        Assert
+            .ThatFunc(() => Explorer.ExploreAndRegisterHooks(typeof(MockTooManyBeforeEachSuite)))
+            .Does.Throw();
 
     [Test]
     public static void ExploreAndRegisterHooksThrowWhenMultipleAfterEach() =>
-        Assertion
-            .AssertFunc(() => Explorer.ExploreAndRegisterHooks(typeof(MockTooManyAfterEachSuite)))
-            .To.Throw();
+        Assert
+            .ThatFunc(() => Explorer.ExploreAndRegisterHooks(typeof(MockTooManyAfterEachSuite)))
+            .Does.Throw();
 
     [Test]
     public static void RunTestInvokesBeforeAndAfterEachAroundTheTest()
@@ -126,10 +126,10 @@ internal static class Hooks
 
         Runner.RunTest(suite.GetMethod(nameof(MockHooksSuite.PassingTest)));
 
-        Assertion.AssertCollection(MockHooksSuite.Log).To.Have.Count(3);
-        Assertion.Assert(MockHooksSuite.Log[0]).EqualTo("before");
-        Assertion.Assert(MockHooksSuite.Log[1]).EqualTo("test");
-        Assertion.Assert(MockHooksSuite.Log[2]).EqualTo("after");
+        Assert.ThatCollection(MockHooksSuite.Log).Has.Count(3);
+        Assert.That(MockHooksSuite.Log[0]).Is.EqualTo("before");
+        Assert.That(MockHooksSuite.Log[1]).Is.EqualTo("test");
+        Assert.That(MockHooksSuite.Log[2]).Is.EqualTo("after");
     }
 
     [Test]
@@ -141,7 +141,7 @@ internal static class Hooks
 
         Runner.RunTest(suite.GetMethod(nameof(MockHooksSuite.ThrowingTest)));
 
-        Assertion.AssertCollection(MockHooksSuite.Log).To.Have.Count(3);
-        Assertion.Assert(MockHooksSuite.Log[2]).EqualTo("after");
+        Assert.ThatCollection(MockHooksSuite.Log).Has.Count(3);
+        Assert.That(MockHooksSuite.Log[2]).Is.EqualTo("after");
     }
 }

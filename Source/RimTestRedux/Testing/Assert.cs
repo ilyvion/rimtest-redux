@@ -38,30 +38,30 @@ public class AssertionException : Exception
 /// Generic assertion grammar object.
 /// </summary>
 /// <remarks>
-/// Usage: Assert(value)[.To|.Do|.Be|.Is|.Not].Comparison([Parameters...])
+/// Usage: Assert.That(value)[.To|.Do|.Does|.Be|.Is|.Has|.The|.Not].Comparison([Parameters...])
 /// </remarks>
-public class Assertion
+public class Assert
 {
     /// <summary>
     /// Entry point for value based assertions
     /// </summary>
     /// <param name="thing">A comparable value</param>
     /// <returns>An AssertValue, specialized in asserting values</returns>
-    public static AssertValue Assert([AllowNull] IComparable thing) => new(thing);
+    public static AssertValue That([AllowNull] IComparable thing) => new(thing);
 
     /// <summary>
     /// Entry point for collection/enumerable based assertions
     /// </summary>
     /// <param name="thing">A collection</param>
     /// <returns>An AssertCollection, specialized in asserting collections</returns>
-    public static AssertCollection AssertCollection([AllowNull] IEnumerable thing) => new(thing);
+    public static AssertCollection ThatCollection([AllowNull] IEnumerable thing) => new(thing);
 
     /// <summary>
     /// Entry point for Function based assertions
     /// </summary>
     /// <param name="thing">A function</param>
     /// <returns>An AssertFunc, specialized in asserting Functions</returns>
-    public static AssertFunc AssertFunc(Func<dynamic> thing) =>
+    public static AssertFunc ThatFunc(Func<dynamic> thing) =>
         thing == null ? throw new ArgumentNullException(nameof(thing)) : new AssertFunc(thing);
 
     /// <summary>
@@ -69,26 +69,26 @@ public class Assertion
     /// </summary>
     /// <param name="thing">An Action</param>
     /// <returns>An AssertAction, specialized in asserting Actions</returns>
-    public static AssertAction AssertFunc(Action thing) =>
+    public static AssertAction ThatFunc(Action thing) =>
         thing == null ? throw new ArgumentNullException(nameof(thing)) : new AssertAction(thing);
 
     /// <summary>
-    /// Negation flag, can be double negated with multiple uses of the .Not grammar, used to negate a check expectation. (i.e. Assert(1).Not.To.Be.EqualTo(2))
+    /// Negation flag, can be double negated with multiple uses of the .Not grammar, used to negate a check expectation. (i.e. Assert.That(1).Not.To.Be.EqualTo(2))
     /// </summary>
     protected bool Negated { get; set; }
 
     /// <summary>
-    /// Base constructor, restricted to the specialized Assertion subtypes defined in this assembly.
+    /// Base constructor, restricted to the specialized Assert subtypes defined in this assembly.
     /// </summary>
-    /// <remarks>Not meant to be instantiated directly; use <see cref="Assert"/>, <see cref="AssertCollection"/>, or <see cref="AssertFunc(Func{dynamic})"/> instead.</remarks>
-    private protected Assertion() { }
+    /// <remarks>Not meant to be instantiated directly; use <see cref="That"/>, <see cref="ThatCollection"/>, or <see cref="ThatFunc(Func{dynamic})"/> instead.</remarks>
+    private protected Assert() { }
 }
 
 /// <summary>
 /// Specialized Assertion for Values
 /// </summary>
 /// <remarks>Allows the EqualTo, LessThan, GreaterThan, BetweenInclusive, BetweenExclusive, SameValueAs, SameReferenceAs, Null, True and False checks.</remarks>
-public class AssertValue : Assertion
+public class AssertValue : Assert
 {
     private readonly IComparable? thing;
 
@@ -144,6 +144,12 @@ public class AssertValue : Assertion
     /// </summary>
     /// <remarks>All grammar links can be chained as needed.</remarks>
     public AssertValue Do => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertValue The => this;
 
     /// <summary>
     /// Check: asserted value EQUALS TO otherThing
@@ -384,7 +390,7 @@ public class AssertValue : Assertion
 /// </summary>
 /// <remarks>Allows the Contains, Empty and Count checks.</remarks>
 #pragma warning disable CA1711 // Identifiers should not have incorrect suffix
-public class AssertCollection : Assertion
+public class AssertCollection : Assert
 #pragma warning restore CA1711
 {
     private readonly IEnumerable? thing;
@@ -448,7 +454,25 @@ public class AssertCollection : Assertion
     /// Grammar link, doesn't have any effect.
     /// </summary>
     /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Does => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
     public AssertCollection Have => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection Has => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertCollection The => this;
 
     /// <summary>
     /// Check: asserted collection CONTAINS item
@@ -530,7 +554,7 @@ public class AssertCollection : Assertion
 /// Specialized Assertion for Functions
 /// </summary>
 /// <remarks>Allows the Throw check.</remarks>
-public class AssertFunc : Assertion
+public class AssertFunc : Assert
 {
     private readonly Func<dynamic> func;
 
@@ -579,6 +603,18 @@ public class AssertFunc : Assertion
     /// </summary>
     /// <remarks>All grammar links can be chained as needed.</remarks>
     public AssertFunc Do => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertFunc Does => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public AssertFunc The => this;
 
     /// <summary>
     /// Constructor for AssertAction usage
@@ -670,6 +706,18 @@ public class AssertAction : AssertFunc
     /// </summary>
     /// <remarks>All grammar links can be chained as needed.</remarks>
     public new AssertAction Do => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public new AssertAction Does => this;
+
+    /// <summary>
+    /// Grammar link, doesn't have any effect.
+    /// </summary>
+    /// <remarks>All grammar links can be chained as needed.</remarks>
+    public new AssertAction The => this;
 
     /// <summary>
     /// Check: executing asserted callable throws an error.

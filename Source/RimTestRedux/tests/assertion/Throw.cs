@@ -5,9 +5,9 @@ internal static class Throw
 {
     [Test]
     public static void PassWhenThrow() =>
-        Assertion.AssertFunc(() => throw new ShouldHaveThrownException()).To.Throw();
+        Assert.ThatFunc(() => throw new ShouldHaveThrownException()).Does.Throw();
 
     [Test]
     [ShouldThrow]
-    public static void ThrowWhenNotThrow() => Assertion.AssertFunc(() => 1).To.Throw();
+    public static void ThrowWhenNotThrow() => Assert.ThatFunc(() => 1).Does.Throw();
 }

@@ -4,9 +4,9 @@
 internal static class False
 {
     [Test]
-    public static void PassWhenFalse() => Assertion.Assert(false).To.Be.False();
+    public static void PassWhenFalse() => Assert.That(false).Is.False();
 
     [Test]
     [ShouldThrow]
-    public static void ThrowWhenNotFalse() => Assertion.Assert(true).To.Be.False();
+    public static void ThrowWhenNotFalse() => Assert.That(true).Is.False();
 }

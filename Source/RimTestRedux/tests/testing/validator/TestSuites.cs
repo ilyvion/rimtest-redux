@@ -15,39 +15,39 @@ internal static class TestSuites
 {
     [Test]
     public static void PassWhenValid() =>
-        Assertion
-            .AssertFunc(() => Validator.IsValidTestSuite(typeof(MockValidTestSuite)))
-            .Not.To.Throw();
+        Assert
+            .ThatFunc(() => Validator.IsValidTestSuite(typeof(MockValidTestSuite)))
+            .Does.Not.Throw();
 
     [Test]
     public static void PassWhenNonPublic() =>
-        Assertion
-            .AssertFunc(() => Validator.IsValidTestSuite(typeof(MockNonPublicTestSuite)))
-            .Not.To.Throw();
+        Assert
+            .ThatFunc(() => Validator.IsValidTestSuite(typeof(MockNonPublicTestSuite)))
+            .Does.Not.Throw();
 
     [Test]
     public static void IsValidTestSuiteThrowWhenNull() =>
-        Assertion.AssertFunc(() => Validator.IsValidTestSuite(null!)).To.Throw();
+        Assert.ThatFunc(() => Validator.IsValidTestSuite(null!)).Does.Throw();
 
     [Test]
     public static void ChecksAreFalseWhenNull() =>
-        Assertion.Assert(Validator.CheckTestSuiteIsStatic(null!)).To.Be.False();
+        Assert.That(Validator.CheckTestSuiteIsStatic(null!)).Is.False();
 
     [Test]
     public static void PassWhenStatic() =>
-        Assertion.Assert(Validator.CheckTestSuiteIsStatic(typeof(MockValidTestSuite))).To.Be.True();
+        Assert.That(Validator.CheckTestSuiteIsStatic(typeof(MockValidTestSuite))).Is.True();
 
     [Test]
     public static void ThrowWhenNonStatic()
     {
         var type = typeof(MockNonStaticTestSuite);
-        Assertion.Assert(Validator.CheckTestSuiteIsStatic(type)).To.Be.False();
-        Assertion.AssertFunc(() => Validator.IsValidTestSuite(type)).To.Throw();
+        Assert.That(Validator.CheckTestSuiteIsStatic(type)).Is.False();
+        Assert.ThatFunc(() => Validator.IsValidTestSuite(type)).Does.Throw();
     }
 
     [Test]
     public static void ThrowWhenInvalid() =>
-        Assertion
-            .AssertFunc(() => Validator.IsValidTestSuite(typeof(MockNonStaticTestSuite)))
-            .To.Throw();
+        Assert
+            .ThatFunc(() => Validator.IsValidTestSuite(typeof(MockNonStaticTestSuite)))
+            .Does.Throw();
 }

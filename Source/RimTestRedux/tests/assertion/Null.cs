@@ -4,9 +4,9 @@
 internal static class Null
 {
     [Test]
-    public static void PassWhenNull() => Assertion.Assert(null).To.Be.Null();
+    public static void PassWhenNull() => Assert.That(null).Is.Null();
 
     [Test]
     [ShouldThrow]
-    public static void ThrowWhenNotNull() => Assertion.Assert(1).To.Be.Null();
+    public static void ThrowWhenNotNull() => Assert.That(1).Is.Null();
 }

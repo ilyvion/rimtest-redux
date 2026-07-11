@@ -4,9 +4,9 @@
 internal static class GreaterThan
 {
     [Test]
-    public static void PassWhenGreater() => Assertion.Assert(1).To.Be.GreaterThan(0);
+    public static void PassWhenGreater() => Assert.That(1).Is.GreaterThan(0);
 
     [Test]
     [ShouldThrow]
-    public static void ThrowWhenNotGreater() => Assertion.Assert(1).To.Be.GreaterThan(1);
+    public static void ThrowWhenNotGreater() => Assert.That(1).Is.GreaterThan(1);
 }

@@ -8,7 +8,7 @@ internal static class SameAs
     {
         IComparable mock = "a";
         IComparable mock2 = "a";
-        Assertion.Assert(mock).To.Be.SameValueAs(mock2);
+        Assert.That(mock).Is.The.SameValueAs(mock2);
     }
 
     [Test]
@@ -17,14 +17,14 @@ internal static class SameAs
     {
         IComparable mock = "a";
         IComparable mock2 = "b";
-        Assertion.Assert(mock).To.Be.SameValueAs(mock2);
+        Assert.That(mock).Is.The.SameValueAs(mock2);
     }
 
     [Test]
     public static void PassWhenSameReference()
     {
         IComparable mock = "a";
-        Assertion.Assert(mock).To.Be.SameReferenceAs(mock);
+        Assert.That(mock).Is.The.SameReferenceAs(mock);
     }
 
     [Test]
@@ -32,6 +32,6 @@ internal static class SameAs
     {
         IComparable mock = new string(['a']);
         IComparable mock2 = new string(['a']);
-        Assertion.Assert(mock).Not.To.Be.SameReferenceAs(mock2);
+        Assert.That(mock).Is.Not.The.SameReferenceAs(mock2);
     }
 }

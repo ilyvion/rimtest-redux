@@ -4,27 +4,26 @@
 internal static class BetweenInclusive
 {
     [Test]
-    public static void PassWhenBetweenInclusive() =>
-        Assertion.Assert(1).To.Be.BetweenInclusive(0, 2);
+    public static void PassWhenBetweenInclusive() => Assert.That(1).Is.BetweenInclusive(0, 2);
 
     [Test]
-    public static void PassWhenEqualsMin() => Assertion.Assert(0).To.Be.BetweenInclusive(0, 2);
+    public static void PassWhenEqualsMin() => Assert.That(0).Is.BetweenInclusive(0, 2);
 
     [Test]
-    public static void PassWhenEqualsMax() => Assertion.Assert(2).To.Be.BetweenInclusive(0, 2);
+    public static void PassWhenEqualsMax() => Assert.That(2).Is.BetweenInclusive(0, 2);
 
     [Test]
-    public static void PassWhenEqualsBoth() => Assertion.Assert(1).To.Be.BetweenInclusive(1, 1);
-
-    [Test]
-    [ShouldThrow]
-    public static void ThrowWhenUnder() => Assertion.Assert(-1).To.Be.BetweenInclusive(0, 2);
+    public static void PassWhenEqualsBoth() => Assert.That(1).Is.BetweenInclusive(1, 1);
 
     [Test]
     [ShouldThrow]
-    public static void ThrowWhenOver() => Assertion.Assert(3).To.Be.BetweenInclusive(0, 2);
+    public static void ThrowWhenUnder() => Assert.That(-1).Is.BetweenInclusive(0, 2);
 
     [Test]
     [ShouldThrow]
-    public static void ThrowWhenInvalidLimits() => Assertion.Assert(1).To.Be.BetweenInclusive(2, 0);
+    public static void ThrowWhenOver() => Assert.That(3).Is.BetweenInclusive(0, 2);
+
+    [Test]
+    [ShouldThrow]
+    public static void ThrowWhenInvalidLimits() => Assert.That(1).Is.BetweenInclusive(2, 0);
 }
