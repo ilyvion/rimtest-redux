@@ -74,7 +74,7 @@ public class Assertion
 /// <summary>
 /// Specialized Assertion for Values
 /// </summary>
-/// <remarks>Allows the EqualTo, LessThan, GreaterThan, BetweenInclusive, BetweenExclusive, TheSame, Null, True and False checks.</remarks>
+/// <remarks>Allows the EqualTo, LessThan, GreaterThan, BetweenInclusive, BetweenExclusive, SameValueAs, SameReferenceAs, Null, True and False checks.</remarks>
 /// <remarks>
 /// base constructor
 /// </remarks>
@@ -250,10 +250,10 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
     }
 
     /// <summary>
-    /// Check: asserted value SAME AS otherThing
+    /// Check: asserted value is EQUAL (via <see cref="object.Equals(object?)"/>) to otherThing
     /// </summary>
     /// <param name="otherThing">check value</param>
-    public void TheSame(IComparable otherThing)
+    public void SameValueAs(IComparable otherThing)
     {
         var result = RequireNonNull().Equals(otherThing);
         if (Negated)
@@ -265,7 +265,33 @@ public class AssertValue([AllowNull] IComparable thing) : Assertion()
         {
             throw new AssertionException(
                 (
-                    Negated ? "RimTestRedux.Assertion.NotTheSame" : "RimTestRedux.Assertion.TheSame"
+                    Negated
+                        ? "RimTestRedux.Assertion.NotSameValueAs"
+                        : "RimTestRedux.Assertion.SameValueAs"
+                ).Translate(thing!.ToString(), otherThing?.ToString())
+            );
+        }
+    }
+
+    /// <summary>
+    /// Check: asserted value is the SAME REFERENCE (via <see cref="object.ReferenceEquals(object?, object?)"/>) as otherThing
+    /// </summary>
+    /// <param name="otherThing">check value</param>
+    public void SameReferenceAs(IComparable otherThing)
+    {
+        var result = ReferenceEquals(RequireNonNull(), otherThing);
+        if (Negated)
+        {
+            result = !result;
+        }
+
+        if (!result)
+        {
+            throw new AssertionException(
+                (
+                    Negated
+                        ? "RimTestRedux.Assertion.NotSameReferenceAs"
+                        : "RimTestRedux.Assertion.SameReferenceAs"
                 ).Translate(thing!.ToString(), otherThing?.ToString())
             );
         }

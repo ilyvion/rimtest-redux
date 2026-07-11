@@ -44,8 +44,10 @@
     <RimTestRedux.Assertion.NotBetweenInclusive>Expected {0} not to be between (inclusive) {1} and {2}.</RimTestRedux.Assertion.NotBetweenInclusive>
     <RimTestRedux.Assertion.BetweenExclusive>Expected {0} to be between (exclusive) {1} and {2}.</RimTestRedux.Assertion.BetweenExclusive>
     <RimTestRedux.Assertion.NotBetweenExclusive>Expected {0} not to be between (exclusive) {1} and {2}.</RimTestRedux.Assertion.NotBetweenExclusive>
-    <RimTestRedux.Assertion.TheSame>Expected {0} to be the same as {1}.</RimTestRedux.Assertion.TheSame>
-    <RimTestRedux.Assertion.NotTheSame>Expected {0} not to be the same as {1}.</RimTestRedux.Assertion.NotTheSame>
+    <RimTestRedux.Assertion.SameValueAs>Expected {0} to be equal to {1}.</RimTestRedux.Assertion.SameValueAs>
+    <RimTestRedux.Assertion.NotSameValueAs>Expected {0} not to be equal to {1}.</RimTestRedux.Assertion.NotSameValueAs>
+    <RimTestRedux.Assertion.SameReferenceAs>Expected {0} to be the same reference as {1}.</RimTestRedux.Assertion.SameReferenceAs>
+    <RimTestRedux.Assertion.NotSameReferenceAs>Expected {0} not to be the same reference as {1}.</RimTestRedux.Assertion.NotSameReferenceAs>
     <RimTestRedux.Assertion.Null>Expected {0} to be null.</RimTestRedux.Assertion.Null>
     <RimTestRedux.Assertion.NotNull>Expected {0} not to be null.</RimTestRedux.Assertion.NotNull>
     <RimTestRedux.Assertion.True>Expected {0} to be true.</RimTestRedux.Assertion.True>

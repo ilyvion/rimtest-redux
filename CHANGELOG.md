@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The test runner window has been redesigned to look like a modern CI test report. Each assembly now shows an at-a-glance summary (total/passed/failed/skipped/not-run counts) followed by its test suites, each with a duration and a colored result bar; clicking "Details" on a test suite opens a window listing its individual tests, with an expandable row for each failed or skipped test showing the reason. The old toolbar of bare numbers and checkmarks is gone; running tests, viewing the debug log, and collapsing/expanding assemblies are now icon buttons above the results.
 - The test runner now opens in its own window instead of being embedded in the Mod Options tab. The Mod Options tab still has the startup checkboxes and an "Open Test Runner" button for those who prefer to launch it from there.
 - All of the mod's text (buttons, tooltips, labels, and test result messages) now goes through RimWorld's translation system instead of being hard-coded in English, so translators can localize it into other languages.
+- The `TheSame()` assertion has been renamed to `SameValueAs()` to make clear it checks value equality, and a new `SameReferenceAs()` assertion has been added for checking that two values are literally the same object in memory.
 
 ### Fixed
 
