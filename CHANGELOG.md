@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed the Harmony field reference used to suppress stacktrace caching, which pointed at a field that no longer exists on the current Harmony version.
+- In the test suite details window, long test names and error messages no longer wrap onto a second line and spill into the row below. They're now truncated with an ellipsis instead, and hovering over a truncated name or message shows the full text in a tooltip.
 
 ## [0.1.0] - 2026-07-11
 

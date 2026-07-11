@@ -24,6 +24,8 @@ internal sealed class Window_TestSuiteDetails : Window
     private readonly Type testSuite;
     private readonly HashSet<MethodInfo> expandedTests = [];
     private readonly Dictionary<MethodInfo, Vector2> detailScrollPositions = [];
+    private readonly Dictionary<string, string> nameTruncationCache = [];
+    private readonly Dictionary<string, string> messageTruncationCache = [];
     private Vector2 scrollPosition = Vector2.zero;
 
     // These filters are local to this window rather than sharing FilteredExplorer's static
@@ -239,14 +241,29 @@ internal sealed class Window_TestSuiteDetails : Window
         }
 
         Text.Anchor = TextAnchor.MiddleLeft;
-        Widgets.Label(nameRect, test.Name);
+        var displayName = GenText.Truncate(test.Name, nameRect.width, nameTruncationCache);
+        Widgets.Label(nameRect, displayName);
+        if (displayName != test.Name)
+        {
+            TooltipHandler.TipRegion(nameRect, test.Name);
+        }
 
         if (error != null)
         {
             var prevColor = GUI.color;
             GUI.color = StatusStyle.GetColor(status);
             Text.Font = GameFont.Tiny;
-            Widgets.Label(messageRect, error.ShortMessage());
+            var shortMessage = error.ShortMessage();
+            var displayMessage = GenText.Truncate(
+                shortMessage,
+                messageRect.width,
+                messageTruncationCache
+            );
+            Widgets.Label(messageRect, displayMessage);
+            if (displayMessage != shortMessage)
+            {
+                TooltipHandler.TipRegion(messageRect, shortMessage);
+            }
             Text.Font = prevFont;
             GUI.color = prevColor;
         }
