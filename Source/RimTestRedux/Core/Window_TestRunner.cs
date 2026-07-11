@@ -14,6 +14,9 @@ internal sealed class Window_TestRunner : Window
     private const int SIZE_CONTROLS_ICON_BTN = HEIGHT_CONTROLS;
     private const int WIDTH_CONTROLS_CONTROL_GAP = 6;
     private const int WIDTH_CONTROLS_SECTION_GAP = 18;
+    private const int WIDTH_FILTER_GROUP_LABEL = 90;
+    private const int GAP_CONTROLS_ROW = 8;
+    private const int WIDTH_CLOSE_BUTTON_GAP = 30;
 
     private const int WIDTH_ASSEMBLY_RUN_BTN = SIZE_CONTROLS_ICON_BTN;
     private const int WIDTH_ASSEMBLY_TIME = 70;
@@ -75,6 +78,7 @@ internal sealed class Window_TestRunner : Window
     private void DrawControls(Listing_Standard bar)
     {
         var row = bar.GetRect(HEIGHT_CONTROLS);
+        row = row.LeftPartPixels(row.width - WIDTH_CLOSE_BUTTON_GAP);
 
         DrawIconButton(
             ref row,
@@ -127,6 +131,94 @@ internal sealed class Window_TestRunner : Window
         {
             FilteredExplorer.UpdateFilter(new Regex(@""));
         }
+
+        bar.Gap(GAP_CONTROLS_ROW);
+        DrawStatusFilters(bar);
+        bar.GapLine();
+    }
+
+    private static void DrawStatusFilters(Listing_Standard bar)
+    {
+        var row = bar.GetRect(HEIGHT_CONTROLS);
+
+        Text.Anchor = TextAnchor.MiddleLeft;
+        _ = RectCursor.TakeLeft(ref row, WIDTH_FILTER_GROUP_LABEL, out var asmLabelRect);
+        Widgets.Label(asmLabelRect, "RimTestRedux.AssembliesGroupLabel".Translate());
+        Text.Anchor = TextAnchor.UpperLeft;
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
+
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusError,
+            "RimTestRedux.StatFailed".Translate(),
+            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.ERROR),
+            ref FilteredExplorer.failEnabledAsm
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusWarning,
+            "RimTestRedux.StatWarning".Translate(),
+            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.WARNING),
+            ref FilteredExplorer.warningEnabledAsm
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusUnknown,
+            "RimTestRedux.StatNotRun".Translate(),
+            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.UNKNOWN),
+            ref FilteredExplorer.unknownEnabledAsm
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusPass,
+            "RimTestRedux.StatPassed".Translate(),
+            StatusExplorer.GetAssemblyStatusCount(AssemblyStatus.PASS),
+            ref FilteredExplorer.passEnabledAsm
+        );
+
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_SECTION_GAP);
+
+        Text.Anchor = TextAnchor.MiddleLeft;
+        _ = RectCursor.TakeLeft(ref row, WIDTH_FILTER_GROUP_LABEL, out var tsLabelRect);
+        Widgets.Label(tsLabelRect, "RimTestRedux.TestSuitesGroupLabel".Translate());
+        Text.Anchor = TextAnchor.UpperLeft;
+        RectCursor.TakeLeft(ref row, WIDTH_CONTROLS_CONTROL_GAP);
+
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusError,
+            "RimTestRedux.StatFailed".Translate(),
+            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.ERROR),
+            ref FilteredExplorer.failEnabledTS
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusWarning,
+            "RimTestRedux.StatWarning".Translate(),
+            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.WARNING),
+            ref FilteredExplorer.warningEnabledTS
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusSkip,
+            "RimTestRedux.StatSkipped".Translate(),
+            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.SKIP),
+            ref FilteredExplorer.skipEnabledTS
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusUnknown,
+            "RimTestRedux.StatNotRun".Translate(),
+            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.UNKNOWN),
+            ref FilteredExplorer.unknownEnabledTS
+        );
+        StatusFilterBadge.Draw(
+            ref row,
+            Icons.StatusPass,
+            "RimTestRedux.StatPassed".Translate(),
+            StatusExplorer.GetTestSuiteStatusCount(TestSuiteStatus.PASS),
+            ref FilteredExplorer.passEnabledTS
+        );
     }
 
     private static void DrawIconButton(ref Rect row, Texture2D icon, string tooltip, Action onClick)

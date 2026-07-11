@@ -110,4 +110,38 @@ internal static class Testing
             .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonStaticTest")))
             .To.Throw();
     }
+
+    // -----
+
+    [Test]
+    public static void DoubleCheckIsFalseWhenNonStatic() =>
+        Assertion.Assert(Validator.CheckTestIsStatic(GetMethodInfo("NonStaticTest"))).To.Be.False();
+
+    [Test]
+    public static void DoubleCheckIsFalseWhenNonVoidReturnType() =>
+        Assertion
+            .Assert(Validator.CheckTestReturnsVoid(GetMethodInfo("NonVoidReturnTest")))
+            .To.Be.False();
+
+    [Test]
+    public static void DoubleCheckIsFalseWhenAcceptsParameters() =>
+        Assertion
+            .Assert(Validator.CheckTestIsParameterFree(GetMethodInfo("NonParameterFreeTest")))
+            .To.Be.False();
+
+    [Test]
+    public static void DoubleThrowWhenInvalid()
+    {
+        Assertion
+            .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonParameterFreeTest")))
+            .To.Throw();
+
+        Assertion
+            .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonVoidReturnTest")))
+            .To.Throw();
+
+        Assertion
+            .AssertFunc(() => Validator.IsValidTest(GetMethodInfo("NonStaticTest")))
+            .To.Throw();
+    }
 }

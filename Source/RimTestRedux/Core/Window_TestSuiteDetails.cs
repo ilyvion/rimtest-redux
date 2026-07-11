@@ -84,6 +84,38 @@ internal sealed class Window_TestSuiteDetails : Window
 
         listing.GapLine();
 
+        var filterRow = listing.GetRect(HEIGHT_TEST_ROW);
+        StatusFilterBadge.Draw(
+            ref filterRow,
+            Icons.StatusError,
+            "RimTestRedux.StatFailed".Translate(),
+            tally[TestStatus.ERROR],
+            ref FilteredExplorer.failEnabledT
+        );
+        StatusFilterBadge.Draw(
+            ref filterRow,
+            Icons.StatusSkip,
+            "RimTestRedux.StatSkipped".Translate(),
+            tally[TestStatus.SKIP],
+            ref FilteredExplorer.skipEnabledT
+        );
+        StatusFilterBadge.Draw(
+            ref filterRow,
+            Icons.StatusUnknown,
+            "RimTestRedux.StatNotRun".Translate(),
+            tally[TestStatus.UNKNOWN],
+            ref FilteredExplorer.unknownEnabledT
+        );
+        StatusFilterBadge.Draw(
+            ref filterRow,
+            Icons.StatusPass,
+            "RimTestRedux.StatPassed".Translate(),
+            tally[TestStatus.PASS],
+            ref FilteredExplorer.passEnabledT
+        );
+
+        listing.GapLine();
+
         var tests = FilteredExplorer.GetFilteredTests(testSuite).OrderBy(t => t.Name).ToList();
 
         var listRect = listing.GetRect(inRect.height - listing.CurHeight - GAP);

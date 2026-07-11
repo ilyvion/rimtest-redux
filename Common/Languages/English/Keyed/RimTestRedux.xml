@@ -9,6 +9,7 @@
     <RimTestRedux.StatTests>Tests</RimTestRedux.StatTests>
     <RimTestRedux.StatPassed>Passed</RimTestRedux.StatPassed>
     <RimTestRedux.StatFailed>Failed</RimTestRedux.StatFailed>
+    <RimTestRedux.StatWarning>Warnings</RimTestRedux.StatWarning>
     <RimTestRedux.StatSkipped>Skipped</RimTestRedux.StatSkipped>
     <RimTestRedux.StatNotRun>Not run</RimTestRedux.StatNotRun>
     <RimTestRedux.TestSuitesHeader>Test Suites ({0})</RimTestRedux.TestSuitesHeader>
@@ -16,6 +17,10 @@
     <RimTestRedux.RunSuiteTooltip>Run all tests in this test suite</RimTestRedux.RunSuiteTooltip>
     <RimTestRedux.RunTestTooltip>Run this test</RimTestRedux.RunTestTooltip>
     <RimTestRedux.DetailsButton>Details</RimTestRedux.DetailsButton>
+    <RimTestRedux.AssembliesGroupLabel>Assemblies</RimTestRedux.AssembliesGroupLabel>
+    <RimTestRedux.TestSuitesGroupLabel>Test Suites</RimTestRedux.TestSuitesGroupLabel>
+    <RimTestRedux.FilterHideTooltip>{0}: {1}\n\nClick to hide {0} results.</RimTestRedux.FilterHideTooltip>
+    <RimTestRedux.FilterShowTooltip>{0}: {1}\n\nClick to show {0} results.</RimTestRedux.FilterShowTooltip>
 
     <!-- Core/Settings.cs -->
     <RimTestRedux.IncludeOwnTestsLabel>Include RimTest Redux' own test suite</RimTestRedux.IncludeOwnTestsLabel>
