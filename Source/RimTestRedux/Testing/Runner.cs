@@ -12,6 +12,8 @@ public static class Runner
     /// Check a test validity and run it if possible.
     /// Update the status to TestStatus.SKIP if invalid, TestStatus.PASS if succesfull, TestStatus.ERROR if failed.
     /// Registers any detected error to the test.
+    /// If the test's suite has a [BeforeEach]/[AfterEach] hook registered, it's run immediately before/after the
+    /// test, respectively; [AfterEach] is guaranteed to run (via try/finally) even if [BeforeEach] or the test itself throws.
     /// </summary>
     /// <param name="test"></param>
     /// <seealso cref="TestStatus"/>
@@ -28,13 +30,23 @@ public static class Runner
             return;
         }
         var expectedException = test.TryGetAttribute<ShouldThrowAttribute>();
+        var beforeEach = TestSuite2HookLink.GetBeforeEach(test.DeclaringType!);
+        var afterEach = TestSuite2HookLink.GetAfterEach(test.DeclaringType!);
         var stopwatch = new Stopwatch();
         try
         {
-            stopwatch.Start();
-            // tests are static (null reference object) and do NOT accept arguments (null parameters array)
-            _ = test.Invoke(null, null);
-            stopwatch.Stop();
+            try
+            {
+                // hooks and tests are static (null reference object) and do NOT accept arguments (null parameters array)
+                _ = beforeEach?.Invoke(null, null);
+                stopwatch.Start();
+                _ = test.Invoke(null, null);
+                stopwatch.Stop();
+            }
+            finally
+            {
+                _ = afterEach?.Invoke(null, null);
+            }
 
             if (expectedException != null)
             {

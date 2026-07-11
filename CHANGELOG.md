@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new icon has been added to the developer debug toolbar (visible in Dev Mode). Clicking it opens the test runner directly, without having to go through the mod's settings.
 - Tests can now be marked with a `[ShouldThrow]` attribute to declare that they're expected to throw an exception. A specific exception type can optionally be required, e.g. `[ShouldThrow(typeof(ArgumentNullException))]`.
 - Assertions now support checking collections/lists directly, e.g. `Assertion.AssertCollection(pawn.health.hediffSet.hediffs).To.Contain(myHediff)`, `.To.Be.Empty()`, and `.To.Have.Count(3)`.
+- Test suites can now declare a `[BeforeEach]` method and/or an `[AfterEach]` method, which automatically run immediately before and after every test in that suite. This means shared setup (like building a test `Map` or `Pawn`) no longer has to be copy-pasted into every test, and `[AfterEach]` is guaranteed to run for cleanup even if the test it followed failed.
 
 ### Changed
 

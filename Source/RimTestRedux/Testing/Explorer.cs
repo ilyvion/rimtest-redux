@@ -621,6 +621,43 @@ public static class TestSuite2TestLink
 }
 
 /// <summary>
+/// Stores and manages a test suite's registered [BeforeEach]/[AfterEach] hooks.
+/// </summary>
+public static class TestSuite2HookLink
+{
+    private static readonly Dictionary<Type, MethodInfo?> testSuite2BeforeEach = [];
+    private static readonly Dictionary<Type, MethodInfo?> testSuite2AfterEach = [];
+
+    /// <summary>
+    /// </summary>
+    /// <param name="testSuite"></param>
+    /// <param name="method"></param>
+    public static void SetBeforeEach(Type testSuite, MethodInfo? method) =>
+        testSuite2BeforeEach[testSuite] = method;
+
+    /// <summary>
+    /// </summary>
+    /// <param name="testSuite"></param>
+    /// <returns>The registered [BeforeEach] method for this test suite, or null if none is registered.</returns>
+    public static MethodInfo? GetBeforeEach(Type testSuite) =>
+        testSuite2BeforeEach.TryGetValue(testSuite, out var value) ? value : null;
+
+    /// <summary>
+    /// </summary>
+    /// <param name="testSuite"></param>
+    /// <param name="method"></param>
+    public static void SetAfterEach(Type testSuite, MethodInfo? method) =>
+        testSuite2AfterEach[testSuite] = method;
+
+    /// <summary>
+    /// </summary>
+    /// <param name="testSuite"></param>
+    /// <returns>The registered [AfterEach] method for this test suite, or null if none is registered.</returns>
+    public static MethodInfo? GetAfterEach(Type testSuite) =>
+        testSuite2AfterEach.TryGetValue(testSuite, out var value) ? value : null;
+}
+
+/// <summary>
 /// Stores and manages Test level data, aka known statuses and exceptions.
 /// </summary>
 public static class TestExplorer
@@ -707,6 +744,7 @@ public static class Explorer
             {
                 Assembly2TestSuiteLink.RegisterTestSuite2Asm(testSuite, asm);
                 Validator.IsValidTestSuite(testSuite);
+                ExploreAndRegisterHooks(testSuite);
                 TestSuiteExplorer.SetTestSuiteStatus(testSuite, TestSuiteStatus.UNKNOWN);
             }
             catch (Exception e)
@@ -716,6 +754,54 @@ public static class Explorer
                 continue;
             }
             ExploreAndRegisterTests(testSuite);
+        }
+    }
+
+    /// <summary>
+    /// Discovers a test suite's [BeforeEach] and [AfterEach] hook methods, if any, and registers them
+    /// with <see cref="TestSuite2HookLink"/>. Throws if a suite declares more than one of either, or if
+    /// a declared hook doesn't meet the same static/void/parameter-free requirements as a test.
+    /// </summary>
+    /// <param name="testSuite">Entry point</param>
+    public static void ExploreAndRegisterHooks(Type testSuite)
+    {
+        if (testSuite == null)
+        {
+            throw new ArgumentNullException(nameof(testSuite));
+        }
+
+        var methods = testSuite.GetMethods(
+            BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static
+        );
+
+        var beforeEachMethods = methods
+            .Where(info => info.TryGetAttribute<BeforeEachAttribute>() != null)
+            .ToList();
+        if (beforeEachMethods.Count > 1)
+        {
+            throw new InvalidTestSuiteException(
+                $"{testSuite.Name}: a test suite may only declare one [BeforeEach] method."
+            );
+        }
+        if (beforeEachMethods.Count == 1)
+        {
+            Validator.IsValidHook(beforeEachMethods[0]);
+            TestSuite2HookLink.SetBeforeEach(testSuite, beforeEachMethods[0]);
+        }
+
+        var afterEachMethods = methods
+            .Where(info => info.TryGetAttribute<AfterEachAttribute>() != null)
+            .ToList();
+        if (afterEachMethods.Count > 1)
+        {
+            throw new InvalidTestSuiteException(
+                $"{testSuite.Name}: a test suite may only declare one [AfterEach] method."
+            );
+        }
+        if (afterEachMethods.Count == 1)
+        {
+            Validator.IsValidHook(afterEachMethods[0]);
+            TestSuite2HookLink.SetAfterEach(testSuite, afterEachMethods[0]);
         }
     }
 

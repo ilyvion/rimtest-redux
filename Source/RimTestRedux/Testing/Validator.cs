@@ -45,4 +45,31 @@ internal static class Validator
 
     public static bool CheckTestIsParameterFree(MethodInfo method) =>
         method != null && method.GetParameters().Length == 0;
+
+    public static void IsValidHook(MethodInfo method)
+    {
+        if (method == null)
+        {
+            throw new ArgumentNullException(nameof(method));
+        }
+
+        if (!CheckTestReturnsVoid(method))
+        {
+            throw new InvalidTestSuiteException(
+                $"{method.Name}: setup/teardown hooks must have a void return type."
+            );
+        }
+        if (!CheckTestIsParameterFree(method))
+        {
+            throw new InvalidTestSuiteException(
+                $"{method.Name}: setup/teardown hooks must need no parameters."
+            );
+        }
+        if (!CheckTestIsStatic(method))
+        {
+            throw new InvalidTestSuiteException(
+                $"{method.Name}: setup/teardown hooks must be static."
+            );
+        }
+    }
 }
