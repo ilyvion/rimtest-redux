@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed the Harmony field reference used to suppress stacktrace caching, which pointed at a field that no longer exists on the current Harmony version.
+
 ## [0.1.0] - 2026-07-11
 
 ### Added

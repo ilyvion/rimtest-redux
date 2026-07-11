@@ -28,7 +28,7 @@ internal static class ExceptionTextExtensions
     public static string FullText(this Exception exception)
     {
         ref var noStacktraceCaching = ref AccessTools.StaticFieldRefAccess<bool>(
-            "HarmonyMod.HarmonyMain:noStacktraceCaching"
+            "HarmonyMod.Settings:noStacktraceCaching"
         );
 
         var original = noStacktraceCaching;
